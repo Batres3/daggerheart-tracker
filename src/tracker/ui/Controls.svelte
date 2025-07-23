@@ -73,11 +73,6 @@
                 .onClick(() => tracker.reset());
         });
         menu.addItem((item) => {
-            item.setIcon(DICE)
-                .setTitle("Re-roll Initiatives")
-                .onClick(() => tracker.roll(plugin));
-        });
-        menu.addItem((item) => {
             item.setIcon(GROUP)
                 .setTitle(
                     plugin.data.condense
@@ -108,7 +103,6 @@
                 }
             );
         });
-        menu.addSeparator();
 
         if ($data.parties && $data.parties.length) {
             if (Platform.isMobile) {
@@ -158,94 +152,6 @@
                 });
             }
         }
-        if (Platform.isMobile) {
-            menu.addItem((item) => {
-                item.setIcon("dice")
-                    .setTitle("Party Rolling Behavior")
-                    .setIsLabel(true);
-            });
-            menu.addItem((item) => {
-                item.setTitle("Always Roll")
-                    .onClick(async () => {
-                        plugin.data.rollPlayerInitiatives =
-                            RollPlayerInitiativeBehavior.Always;
-                        await plugin.saveSettings();
-                    })
-                    .setChecked(
-                        plugin.data.rollPlayerInitiatives ==
-                            RollPlayerInitiativeBehavior.Always
-                    );
-            });
-            menu.addItem((item) => {
-                item.setTitle("Never Roll")
-                    .onClick(async () => {
-                        plugin.data.rollPlayerInitiatives =
-                            RollPlayerInitiativeBehavior.Never;
-                        await plugin.saveSettings();
-                    })
-                    .setChecked(
-                        plugin.data.rollPlayerInitiatives ==
-                            RollPlayerInitiativeBehavior.Never
-                    );
-            });
-            menu.addItem((item) => {
-                item.setTitle("Set to Zero")
-                    .onClick(async () => {
-                        plugin.data.rollPlayerInitiatives =
-                            RollPlayerInitiativeBehavior.SetToZero;
-                        await plugin.saveSettings();
-                    })
-                    .setChecked(
-                        plugin.data.rollPlayerInitiatives ==
-                            RollPlayerInitiativeBehavior.SetToZero
-                    );
-            });
-        } else {
-            menu.addItem((item) => {
-                const partyMenu = item
-                    .setIcon("dice")
-                    .setTitle("Party Rolling Behavior")
-                    .setSubmenu();
-
-                partyMenu.addItem((item) => {
-                    item.setTitle("Always Roll")
-                        .onClick(async () => {
-                            plugin.data.rollPlayerInitiatives =
-                                RollPlayerInitiativeBehavior.Always;
-                            await plugin.saveSettings();
-                        })
-                        .setChecked(
-                            plugin.data.rollPlayerInitiatives ==
-                                RollPlayerInitiativeBehavior.Always
-                        );
-                });
-                partyMenu.addItem((item) => {
-                    item.setTitle("Never Roll")
-                        .onClick(async () => {
-                            plugin.data.rollPlayerInitiatives =
-                                RollPlayerInitiativeBehavior.Never;
-                            await plugin.saveSettings();
-                        })
-                        .setChecked(
-                            plugin.data.rollPlayerInitiatives ==
-                                RollPlayerInitiativeBehavior.Never
-                        );
-                });
-                partyMenu.addItem((item) => {
-                    item.setTitle("Set to Zero")
-                        .onClick(async () => {
-                            plugin.data.rollPlayerInitiatives =
-                                RollPlayerInitiativeBehavior.SetToZero;
-                            await plugin.saveSettings();
-                        })
-                        .setChecked(
-                            plugin.data.rollPlayerInitiatives ==
-                                RollPlayerInitiativeBehavior.SetToZero
-                        );
-                });
-            });
-        }
-
         menu.addSeparator();
         if (!Platform.isMobile) {
             menu.addItem((item) => {

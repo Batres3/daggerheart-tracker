@@ -46,8 +46,6 @@ export interface InitiativeTrackerData {
     builder: BuilderState;
     descending: boolean;
     version: number[];
-
-    rollPlayerInitiatives: RollPlayerInitiativeBehavior;
 }
 export interface InputValidate {
     input: HTMLInputElement;

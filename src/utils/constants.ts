@@ -12,12 +12,6 @@ export const DEFAULT_UNDEFINED = "–";
 
 export const META_MODIFIER = Platform.isMacOS ? "Meta" : "Control";
 
-export enum RollPlayerInitiativeBehavior {
-    Always,
-    Never,
-    SetToZero
-}
-
 export const OVERFLOW_TYPE: { [key: string]: string } = {
     ignore: "ignore",
     current: "current",
@@ -80,7 +74,6 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
         showXP: true,
         sidebarIcon: true
     },
-    rollPlayerInitiatives: RollPlayerInitiativeBehavior.Always
 };
 
 export const DECIMAL_TO_VULGAR_FRACTION: Record<string, string> = {
