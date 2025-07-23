@@ -353,8 +353,10 @@ function createTracker() {
                     }
                     if (dc) {
                         if (dc.charAt(0) == "+" || dc.charAt(0) == "-") {
-                            creature.dc.current += parseInt(dc);
+                            creature.dc.current = Number(creature.dc.current) + parseInt(dc);
                             message.ac_add = true;
+                        } else if (dc.charAt(0) == "r") {
+                            creature.dc.reset();
                         } else {
                             creature.dc.current = parseInt(dc);
                         }

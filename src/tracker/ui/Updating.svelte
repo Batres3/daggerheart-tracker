@@ -208,12 +208,12 @@
         {:else if $updateTarget == "dc"}
             <div class="hp-status">
                 {#if plugin.data.beginnerTips}
-                    <small class="label"> Set Difficulty </small>
+                    <small class="label"> Set, (+/-)modify or (r)reset the Difficulty of creatures </small>
                 {/if}
                 <div class="input">
                     <tag
                         use:dcIcon
-                        aria-label="Set or (+/-)modify the Difficulty of creatures"
+                        aria-label="Set, (+/-)modify or (r)reset the Difficulty of creatures"
                         style="margin: 0 0.2rem 0 0.7rem"
                     />
                     <input
