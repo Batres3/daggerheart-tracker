@@ -138,7 +138,7 @@ export class CreatureView extends ItemView {
         }
 
         if (
-            creature["statblock-link"] &&
+            creature.statblock_link &&
             (this.plugin.data.preferStatblockLink ||
                 !this.plugin.canUseStatBlocks)
         ) {

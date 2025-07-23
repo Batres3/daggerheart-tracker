@@ -14,9 +14,9 @@ export class Dnd5eLazyGmRpgSystem extends RpgSystem {
     dnd5eRpgSystem: Dnd5eRpgSystem;
 
     override systemDifficulties: [string, string, ...string[]] = [
-		"Not Deadly",
-		"Deadly"
-	]
+        "Not Deadly",
+        "Deadly"
+    ]
 
     constructor(plugin: InitiativeTracker) {
         super();
@@ -28,7 +28,7 @@ export class Dnd5eLazyGmRpgSystem extends RpgSystem {
 
     getCreatureDifficulty(creature: GenericCreature, _?: number[]): number {
         return convertFraction(
-            getFromCreatureOrBestiary(this.plugin, creature, (c) => c?.cr ?? 0)
+            getFromCreatureOrBestiary(this.plugin, creature, (c) => c?.atk ?? 0)
         );
     }
 

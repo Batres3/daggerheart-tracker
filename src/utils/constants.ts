@@ -21,7 +21,6 @@ export enum RollPlayerInitiativeBehavior {
 export const OVERFLOW_TYPE: { [key: string]: string } = {
     ignore: "ignore",
     current: "current",
-    temp: "temp"
 };
 
 export const RESOLVE_TIES: { [key: string]: string } = {
@@ -35,7 +34,6 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     parties: [],
     defaultParty: null,
     statuses: [...Conditions],
-    unconsciousId: "Unconscious",
     version: [],
     canUseDiceRoll: false,
     preferStatblockLink: false,
@@ -53,6 +51,7 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     },
     condense: false,
     clamp: true,
+    massiveDamage: false,
     autoStatus: true,
     beginnerTips: true,
     displayDifficulty: true,

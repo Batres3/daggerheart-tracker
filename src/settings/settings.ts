@@ -15,12 +15,12 @@ import type InitiativeTracker from "../main";
 import { PlayerSuggestionModal } from "../utils/suggester";
 import { FileInputSuggest, FolderInputSuggest } from "obsidian-utilities";
 import {
-    AC,
+    DC,
     Conditions,
     DEFAULT_UNDEFINED,
     EDIT,
     HP,
-    INITIATIVE,
+    STRESS,
     OVERFLOW_TYPE,
     RESOLVE_TIES
 } from "../utils";
@@ -420,18 +420,18 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             setIcon(
                 headers.createDiv({
                     attr: {
-                        "aria-label": "Armor Class"
+                        "aria-label": "Difficulty"
                     }
                 }),
-                AC
+                DC
             );
             setIcon(
                 headers.createDiv({
                     attr: {
-                        "aria-label": "Initiative Modifier"
+                        "aria-label": "Stress"
                     }
                 }),
-                INITIATIVE
+                STRESS
             );
             headers.createDiv();
 
@@ -447,10 +447,10 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     text: `${player.hp ?? DEFAULT_UNDEFINED}`
                 });
                 playerDiv.createDiv({
-                    text: `${player.ac ?? DEFAULT_UNDEFINED}`
+                    text: `${player.dc ?? DEFAULT_UNDEFINED}`
                 });
                 playerDiv.createDiv({
-                    text: `${player.modifier ?? DEFAULT_UNDEFINED}`
+                    text: `${player.atk ?? DEFAULT_UNDEFINED}`
                 });
                 const icons = playerDiv.createDiv(
                     "initiative-tracker-player-icon"
@@ -493,10 +493,10 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     text: `${player.hp ?? DEFAULT_UNDEFINED}`
                 });
                 playerDiv.createDiv({
-                    text: `${player.ac ?? DEFAULT_UNDEFINED}`
+                    text: `${player.dc ?? DEFAULT_UNDEFINED}`
                 });
                 playerDiv.createDiv({
-                    text: `${player.modifier ?? DEFAULT_UNDEFINED}`
+                    text: `${player.atk ?? DEFAULT_UNDEFINED}`
                 });
                 const icons = playerDiv.createDiv({
                     cls: "initiative-tracker-player-icon imported",
@@ -1089,17 +1089,17 @@ class NewPlayerModal extends Modal {
                     const { ac, hp, modifier, level, name } =
                         metaData.frontmatter;
                     this.player.name = name ?? this.player.name;
-                    this.player.ac = parseInt(ac ?? this.player.ac, 10);
+                    this.player.dc = parseInt(ac ?? this.player.dc, 10);
                     this.player.hp = parseInt(hp ?? this.player.hp, 10);
                     this.player.level = parseInt(
                         level ?? this.player.level,
                         10
                     );
-                    this.player.modifier = parseInt(
-                        modifier ?? this.player.modifier,
+                    this.player.atk = parseInt(
+                        modifier ?? this.player.atk,
                         10
                     );
-                    this.player["statblock-link"] =
+                    this.player.statblock_link =
                         metaData.frontmatter["statblock-link"];
                     this.display();
                 });
@@ -1175,9 +1175,9 @@ class NewPlayerModal extends Modal {
             });
         });
         new Setting(contentEl).setName("Armor Class").addText((t) => {
-            t.setValue(`${this.player.ac ?? ""}`);
+            t.setValue(`${this.player.dc ?? ""}`);
             t.onChange((v) => {
-                this.player.ac = v;
+                this.player.dc = Number(v);
             });
         });
         new Setting(contentEl)
@@ -1195,9 +1195,9 @@ class NewPlayerModal extends Modal {
                         return error;
                     }
                 };
-                t.setValue(`${this.player.modifier ?? ""}`);
+                t.setValue(`${this.player.atk ?? ""}`);
                 t.onChange((v) => {
-                    this.player.modifier = Number(v);
+                    this.player.atk = Number(v);
                 });
             });
 
@@ -1398,12 +1398,12 @@ class StatusModal extends Modal {
                 .setDesc("The status will default to this amount when added.")
                 .addText(
                     (t) =>
-                        (t
-                            .setValue(`${this.status.startingAmount}`)
-                            .onChange((v) => {
-                                this.status.amount =
-                                    this.status.startingAmount = Number(v);
-                            }).inputEl.type = "number")
+                    (t
+                        .setValue(`${this.status.startingAmount}`)
+                        .onChange((v) => {
+                            this.status.amount =
+                                this.status.startingAmount = Number(v);
+                        }).inputEl.type = "number")
                 );
         }
 

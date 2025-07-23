@@ -26,8 +26,8 @@ export default class Logger {
     async setFile() {
         const file = (await this.adapter.exists(normalizePath(this.logFile)))
             ? await this.vault.getAbstractFileByPath(
-                  normalizePath(this.logFile)
-              )
+                normalizePath(this.logFile)
+            )
             : await this.vault.create(this.logFile, ``);
 
         if (file instanceof TFile) {
@@ -38,7 +38,7 @@ export default class Logger {
         return this.file;
     }
     private file: TFile;
-    constructor(public plugin: InitiativeTracker) {}
+    constructor(public plugin: InitiativeTracker) { }
     get enabled() {
         return this.plugin.data.logging;
     }
@@ -69,16 +69,12 @@ export default class Logger {
             await this.log("## Players");
             await this.log("| Player | Initiative | HP | Statuses |");
             await this.log("| --- | :-: | :-: | :-: |");
-            for (const player of param.players.sort(
-                (a, b) => b.initiative - a.initiative
-            )) {
+            for (const player of param.players) {
                 await this.log(
                     "|",
                     player.getName().replace("|", "\\|"),
                     "|",
-                    player.initiative.toString(),
-                    "|",
-                    player.hp ? `${player.hp}/${player.max}` : "-",
+                    player.hp ? `${player.hp.current}/${player.hp.max}` : "-",
                     "|",
                     [
                         ...(player.status.size
@@ -93,16 +89,12 @@ export default class Logger {
             await this.log("## Creatures");
             await this.log("| Creature | Initiative  | HP | Statuses |");
             await this.log("| --- | :-: | :-: | :-: |");
-            for (const creature of param.creatures.sort(
-                (a, b) => b.initiative - a.initiative
-            )) {
+            for (const creature of param.creatures) {
                 await this.log(
                     "|",
                     creature.getName().replace("|", "\\|"),
                     "|",
-                    creature.initiative.toString(),
-                    "|",
-                    creature.hp ? `${creature.hp}/${creature.max}` : "-",
+                    creature.hp ? `${creature.hp.current}/${creature.hp.max}` : "-",
                     "|",
                     [
                         ...(creature.status.size
@@ -154,14 +146,12 @@ export default class Logger {
                         perCreature.push(
                             `${message.name} took ${(
                                 -1 * message.hp
-                            ).toString()} max HP damage${
-                                message.unc ? " and died" : ""
+                            ).toString()} max HP damage${message.unc ? " and died" : ""
                             }`
                         );
                     } else {
                         perCreature.push(
-                            `${
-                                message.name
+                            `${message.name
                             } gained ${message.hp.toString()} max HP`
                         );
                     }
@@ -169,14 +159,12 @@ export default class Logger {
                     perCreature.push(
                         `${message.name} took ${(
                             -1 * message.hp
-                        ).toString()} damage${
-                            message.unc ? " and was knocked unconscious" : ""
+                        ).toString()} damage${message.unc ? " and was knocked unconscious" : ""
                         }`
                     );
                 } else if (message.hp > 0) {
                     perCreature.push(
-                        `${
-                            message.name
+                        `${message.name
                         } was healed for ${message.hp.toString()} HP`
                     );
                 }
@@ -194,8 +182,7 @@ export default class Logger {
                     );
                 } else {
                     perCreature.push(
-                        `${message.name} AC set to ${
-                            message.ac ? message.ac : "be blank"
+                        `${message.name} AC set to ${message.ac ? message.ac : "be blank"
                         }`
                     );
                 }

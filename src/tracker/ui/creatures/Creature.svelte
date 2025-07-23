@@ -52,20 +52,6 @@
     };
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<td class="initiative-container" on:click={(e) => e.stopPropagation()}>
-    <Initiative
-        initiative={creature.initiative}
-        modifier={[creature.modifier].flat().reduce((a, b) => a + b, 0)}
-        on:click={(e) => e.stopPropagation()}
-        on:initiative={(e) => {
-            tracker.updateCreatures({
-                creature,
-                change: { initiative: Number(e.detail) }
-            });
-        }}
-    />
-</td>
 <td class="name-container">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
@@ -107,35 +93,49 @@
 </td>
 
 <td
+    class="center dc-container creature-adder"
+    class:mobile={Platform.isMobile}
+    on:click|stopPropagation={(evt) => {
+        const prev = $updateTarget;
+        $updateTarget = "dc";
+        if (prev == "hp" || prev == "stress") return;
+        tracker.setUpdate(creature, evt);
+    }}
+>
+    <div
+        class:dirty-ac={creature.dc.current != creature.dc.max}
+        aria-label={creature.dc.current != creature.dc.max ? `${creature.dc.current}` : ""}
+    >
+        {creature.dc.current}
+    </div>
+</td>
+<td
     class="center hp-container creature-adder"
     class:mobile={Platform.isMobile}
     on:click|stopPropagation={(evt) => {
         const prev = $updateTarget;
         $updateTarget = "hp";
-        if (prev == "ac") return;
+        if (prev == "dc" || prev == "stress") return;
         tracker.setUpdate(creature, evt);
     }}
 >
     <div>
-        {@html creature.hpDisplay}
+        <span>{creature.hp.current}/{creature.hp.max}</span>
     </div>
 </td>
 
 <td
-    class="center ac-container creature-adder"
+    class="center stress-container creature-adder"
     class:mobile={Platform.isMobile}
     on:click|stopPropagation={(evt) => {
         const prev = $updateTarget;
-        $updateTarget = "ac";
-        if (prev == "hp") return;
+        $updateTarget = "stress";
+        if (prev == "hp" || prev == "dc") return;
         tracker.setUpdate(creature, evt);
     }}
 >
-    <div
-        class:dirty-ac={creature.current_ac != creature.ac}
-        aria-label={creature.current_ac != creature.ac ? `${creature.ac}` : ""}
-    >
-        {creature.current_ac ? creature.current_ac : DEFAULT_UNDEFINED}
+    <div >
+        <span>{creature.stress.current}/{creature.stress.max}</span>
     </div>
 </td>
 
@@ -182,10 +182,6 @@
         column-gap: 0.25rem;
     }
 
-    .initiative-container {
-        border-top-left-radius: 0.25rem;
-        border-bottom-left-radius: 0.25rem;
-    }
     .controls-container {
         border-top-right-radius: 0.25rem;
         border-bottom-right-radius: 0.25rem;

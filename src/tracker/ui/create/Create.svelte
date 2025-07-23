@@ -35,8 +35,6 @@
         }
     }
 
-    let modifier = JSON.stringify(creature.modifier ?? 0);
-    const prior = modifier;
     const saveButton = (node: HTMLElement) => {
         new ExtraButtonComponent(node)
             .setTooltip("Add Creature")
@@ -46,37 +44,6 @@
                     new Notice("Enter a name!");
                     return;
                 }
-                try {
-                    creature.modifier = JSON.parse(`${modifier}`);
-                } catch (e) {
-                    console.warn(
-                        "Initiative Tracker: Non-parseable modifier provided to creature."
-                    );
-                    creature.modifier = JSON.parse(prior);
-                }
-                if (!creature.modifier) {
-                    creature.modifier = JSON.parse(prior);
-                }
-                if (
-                    (Array.isArray(creature.modifier) &&
-                        !creature.modifier.every((m) => !isNaN(Number(m)))) ||
-                    isNaN(Number(creature.modifier))
-                ) {
-                    console.warn(
-                        "Initiative Tracker: Non-numeric modifier provided to creature."
-                    );
-                    creature.modifier = 0;
-                }
-                if (
-                    creature.initiative <= 0 ||
-                    creature.initiative == null ||
-                    isNaN(creature.initiative)
-                ) {
-                    creature.initiative = await plugin.getInitiativeValue(
-                        creature.modifier
-                    );
-                }
-
                 let existing = $adding.findIndex(([k]) =>
                     equivalent(k, creature)
                 );
@@ -98,18 +65,6 @@
                 if (!creature || !creature.name || !creature.name?.length) {
                     new Notice("Enter a name!");
                     return;
-                }
-                if (!creature.modifier) {
-                    creature.modifier = 0;
-                }
-                if (
-                    creature.initiative <= 0 ||
-                    creature.initiative == null ||
-                    isNaN(creature.initiative)
-                ) {
-                    creature.initiative = await plugin.getInitiativeValue(
-                        creature.modifier
-                    );
                 }
                 let existing = $adding.findIndex(
                     ([k]) => k != creature && equivalent(k, creature)
@@ -138,16 +93,6 @@
                 creature = new Creature({});
             });
     };
-    const diceButton = (node: HTMLElement) => {
-        new ExtraButtonComponent(node)
-            .setIcon(DICE)
-            .setTooltip("Roll Initiative")
-            .onClick(async () => {
-                creature.initiative = await plugin.getInitiativeValue(
-                    creature.modifier
-                );
-            });
-    };
     let nameInput: TextComponent, displayNameInput: HTMLInputElement;
     const name = (node: HTMLElement) => {
         nameInput = new TextComponent(node)
@@ -164,10 +109,6 @@
         modal.onSelect(async (selected) => {
             if (selected.item) {
                 creature = Creature.from(selected.item);
-
-                creature.initiative = await plugin.getInitiativeValue(
-                    creature.modifier
-                );
                 nameInput.setValue(creature.name);
             }
             modal.close();
@@ -219,9 +160,19 @@
             />
         </div>
         <div>
+            <label for="add-dc">Difficulty</label>
+            <input
+                bind:value={creature.dc.max}
+                id="add-dc"
+                name="dc"
+                type="number"
+                tabindex="0"
+            />
+        </div>
+        <div>
             <label for="add-hp">HP</label>
             <input
-                bind:value={creature.hp}
+                bind:value={creature.hp.max}
                 id="add-hp"
                 type="number"
                 name="hp"
@@ -229,54 +180,17 @@
             />
         </div>
         <div>
-            <label for="hit-dice">Hit Dice</label>
+            <label for="add-stress">Stress</label>
             <input
-                bind:value={creature.hit_dice}
-                id="hit-dice"
-                type="text"
-                name="hitdice"
-                tabindex="0"
-            />
-        </div>
-        <div>
-            <label for="add-ac">AC</label>
-            <input
-                bind:value={creature.ac}
-                on:change={() => (creature.dirty_ac = true)}
-                id="add-ac"
-                name="ac"
-                type="text"
-                tabindex="0"
-            />
-        </div>
-        <div>
-            <label for="add-mod">Modifier</label>
-            <input
-                bind:value={modifier}
-                id="add-mod"
-                type="text"
-                name="add-mod"
-                tabindex="0"
-            />
-        </div>
-
-        <div class="initiative">
-            <label for="add-init">Initiative</label>
-            <input
-                bind:value={creature.initiative}
-                id="add-init"
+                bind:value={creature.stress.max}
+                id="add-stress"
                 type="number"
-                name="initiative"
+                name="stress"
                 tabindex="0"
             />
-            <div class="dice" use:diceButton />
         </div>
 
         {#key creature}
-            <div>
-                <label for="add-mod">Static Initiative</label>
-                <div use:staticToggle />
-            </div>
             <div>
                 <label for="add-mod">Hidden</label>
                 <div use:hideToggle />
@@ -324,15 +238,5 @@
     }
     .cancel-button {
         color: var(--text-faint);
-    }
-
-    .initiative {
-        position: relative;
-    }
-    .initiative > .dice {
-        position: absolute;
-        right: 0.25rem;
-        top: 50%;
-        transform: translateY(-50%);
     }
 </style>

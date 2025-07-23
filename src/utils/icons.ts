@@ -2,33 +2,6 @@ import { addIcon } from "obsidian";
 
 export const RANDOM_HP = "RANDOM_HP";
 export function registerIcons() {
-    addIcon(
-        RANDOM_HP,
-        `<svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 548.5 437.8" style="enable-background:new 0 0 548.5 437.8;" xml:space="preserve">
-<g id="Layer_1">
-</g>
-<g id="Layer_3">
-	<path d="M278.8,409.6L256.2,387l-0.2,0.2l-175.7-164C59.7,203.9,48,176.9,48,148.7v-5.8c0-46.4,33.5-86,79.3-93.7
-		c30.3-5,61.1,4.8,82.8,25.7l45,46.8l46.8-46.8c21.7-20.8,52.5-30.7,82.8-25.7c45.7,7.6,79.3,47.3,79.3,93.7v5.8
-		c0,26-9.9,50.9-27.6,69.7l6.5,6.5h48.3c13.5-22.9,20.8-49.2,20.8-76.2v-5.8c0-69.9-50.5-129.5-119.4-141
-		c-45.6-7.6-92,7.3-125.5,39.9l-12,12l-11.1-12c0,0-0.9,0,0,0C211.4,9.2,164.1-5.6,119.4,1.9C50.5,13.4,0,73,0,142.9v5.8
-		c0,41.5,17.2,81.2,47.6,109.5l180.7,168.7c7.5,7,17.4,10.9,27.7,10.9s20.2-3.9,27.7-10.9l8.4-7.8
-		C287.2,416.7,282.7,413.5,278.8,409.6z"/>
-</g>
-<g id="Layer_2">
-	<path d="M331.3,151c-8.7-8.7-22.9-8.7-31.7,0L196.6,254.1c-8.7,8.7-8.7,22.9,0,31.7l103.1,103.1c8.7,8.7,22.9,8.7,31.7,0
-		l103.1-103.1c8.7-8.7,8.7-22.9,0-31.7L331.3,151L331.3,151z M328.9,269.9c0,7.4-6,13.4-13.4,13.4s-13.4-6-13.4-13.4
-		s6-13.4,13.4-13.4S328.9,262.5,328.9,269.9z M243.8,283.4c-7.4,0-13.4-6-13.4-13.4s6-13.4,13.4-13.4c7.4,0,13.4,6,13.4,13.4
-		S251.2,283.4,243.8,283.4z M315.5,328.2c7.4,0,13.4,6,13.4,13.4s-6,13.4-13.4,13.4s-13.4-6-13.4-13.4S308,328.2,315.5,328.2z
-		 M387.1,283.4c-7.4,0-13.4-6-13.4-13.4s6-13.4,13.4-13.4s13.4,6,13.4,13.4S394.6,283.4,387.1,283.4z M315.5,184.8
-		c7.4,0,13.4,6,13.4,13.4c0,7.4-6,13.4-13.4,13.4s-13.4-6-13.4-13.4C302,190.8,308,184.8,315.5,184.8z M369.2,404.3
-		c0,14.8,12,26.9,26.9,26.9h125.5c14.8,0,26.9-12,26.9-26.9V278.9c0-14.8-12-26.9-26.9-26.9h-66.9c7.5,15.1,4.9,33.9-7.6,46.4
-		l-77.8,77.8V404.3z M458.8,355c-7.4,0-13.4-6-13.4-13.4s6-13.4,13.4-13.4s13.4,6,13.4,13.4S466.3,355,458.8,355z"/>
-</g>
-</svg>`
-    );
-
     addIcon(BASE, ICON);
     addIcon(SAVE, SAVE_ICON);
     addIcon(ADD, ADD_ICON);
@@ -38,14 +11,14 @@ export function registerIcons() {
     addIcon(BACKWARD, BACKWARD_ICON);
     addIcon(STOP, STOP_ICON);
     addIcon(GRIP, GRIP_ICON);
+    addIcon(DC, DC_ICON);
     addIcon(HP, HP_ICON);
-    addIcon(AC, AC_ICON);
+    addIcon(STRESS, STRESS_ICON);
     addIcon(HAMBURGER, HAMBURGER_ICON);
     addIcon(ENABLE, ENABLE_ICON);
     addIcon(DISABLE, DISABLE_ICON);
     addIcon(TAG, TAG_ICON);
     addIcon(EDIT, EDIT_ICON);
-    addIcon(INITIATIVE, INITIATIVE_ICON);
     addIcon(REDO, REDO_ICON);
     addIcon(NEW, NEW_ICON);
     addIcon(DICE, DICE_ICON);
@@ -124,8 +97,11 @@ const GRIP_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fo
 export const HP = "initiative-tracker-hp";
 const HP_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="heart" class="svg-inline--fa fa-heart fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3zm-23.6 187.5L259.4 430.5c-2.4 2.4-4.4 2.4-6.8 0L77.2 251.8c-36.5-37.2-43.9-107.6 7.3-150.7 38.9-32.7 98.9-27.8 136.5 10.5l35 35.7 35-35.7c37.8-38.5 97.8-43.2 136.5-10.6 51.1 43.1 43.5 113.9 7.3 150.8z"/></svg>`;
 
-export const AC = "initiative-tracker-ac";
-const AC_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="shield-alt" class="svg-inline--fa fa-shield-alt fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M466.5 83.7l-192-80a48.15 48.15 0 0 0-36.9 0l-192 80C27.7 91.1 16 108.6 16 128c0 198.5 114.5 335.7 221.5 380.3 11.8 4.9 25.1 4.9 36.9 0C360.1 472.6 496 349.3 496 128c0-19.4-11.7-36.9-29.5-44.3zM256.1 446.3l-.1-381 175.9 73.3c-3.3 151.4-82.1 261.1-175.8 307.7z"/></svg>`;
+export const DC = "initiative-tracker-dc";
+const DC_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="running" class="svg-inline--fa fa-running fa-w-13" role="img" viewBox="0 0 416 512"><path fill="currentColor" d="M272 96c26.51 0 48-21.49 48-48S298.51 0 272 0s-48 21.49-48 48 21.49 48 48 48zM113.69 317.47l-14.8 34.52H32c-17.67 0-32 14.33-32 32s14.33 32 32 32h77.45c19.25 0 36.58-11.44 44.11-29.09l8.79-20.52-10.67-6.3c-17.32-10.23-30.06-25.37-37.99-42.61zM384 223.99h-44.03l-26.06-53.25c-12.5-25.55-35.45-44.23-61.78-50.94l-71.08-21.14c-28.3-6.8-57.77-.55-80.84 17.14l-39.67 30.41c-14.03 10.75-16.69 30.83-5.92 44.86s30.84 16.66 44.86 5.92l39.69-30.41c7.67-5.89 17.44-8 25.27-6.14l14.7 4.37-37.46 87.39c-12.62 29.48-1.31 64.01 26.3 80.31l84.98 50.17-27.47 87.73c-5.28 16.86 4.11 34.81 20.97 40.09 3.19 1 6.41 1.48 9.58 1.48 13.61 0 26.23-8.77 30.52-22.45l31.64-101.06c5.91-20.77-2.89-43.08-21.64-54.39l-61.24-36.14 31.31-78.28 20.27 41.43c8 16.34 24.92 26.89 43.11 26.89H384c17.67 0 32-14.33 32-32s-14.33-31.99-32-31.99z"/></svg>`;
+
+export const STRESS = "initiative-tracker-stress";
+const STRESS_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="running" class="svg-inline--fa fa-shield-alt fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M120 56c0-30.9 25.1-56 56-56l24 0c17.7 0 32 14.3 32 32l0 448c0 17.7-14.3 32-32 32l-32 0c-29.8 0-54.9-20.4-62-48-.7 0-1.3 0-2 0-44.2 0-80-35.8-80-80 0-18 6-34.6 16-48-19.4-14.6-32-37.8-32-64 0-30.9 17.6-57.8 43.2-71.1-7.1-12-11.2-26-11.2-40.9 0-44.2 35.8-80 80-80l0-24zm272 0l0 24c44.2 0 80 35.8 80 80 0 15-4.1 29-11.2 40.9 25.7 13.3 43.2 40.1 43.2 71.1 0 26.2-12.6 49.4-32 64 10 13.4 16 30 16 48 0 44.2-35.8 80-80 80-.7 0-1.3 0-2 0-7.1 27.6-32.2 48-62 48l-32 0c-17.7 0-32-14.3-32-32l0-448c0-17.7 14.3-32 32-32l24 0c30.9 0 56 25.1 56 56z"/></svg>`;
 
 export const HAMBURGER = "initiative-tracker-hamburger";
 const HAMBURGER_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>`;
@@ -141,9 +117,6 @@ const EDIT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fo
 
 export const TAG = "initiative-tracker-tags";
 const TAG_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tag" class="svg-inline--fa fa-tag fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>`;
-
-export const INITIATIVE = "initiative-tracker-initiative";
-const INITIATIVE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="running" class="svg-inline--fa fa-running fa-w-13" role="img" viewBox="0 0 416 512"><path fill="currentColor" d="M272 96c26.51 0 48-21.49 48-48S298.51 0 272 0s-48 21.49-48 48 21.49 48 48 48zM113.69 317.47l-14.8 34.52H32c-17.67 0-32 14.33-32 32s14.33 32 32 32h77.45c19.25 0 36.58-11.44 44.11-29.09l8.79-20.52-10.67-6.3c-17.32-10.23-30.06-25.37-37.99-42.61zM384 223.99h-44.03l-26.06-53.25c-12.5-25.55-35.45-44.23-61.78-50.94l-71.08-21.14c-28.3-6.8-57.77-.55-80.84 17.14l-39.67 30.41c-14.03 10.75-16.69 30.83-5.92 44.86s30.84 16.66 44.86 5.92l39.69-30.41c7.67-5.89 17.44-8 25.27-6.14l14.7 4.37-37.46 87.39c-12.62 29.48-1.31 64.01 26.3 80.31l84.98 50.17-27.47 87.73c-5.28 16.86 4.11 34.81 20.97 40.09 3.19 1 6.41 1.48 9.58 1.48 13.61 0 26.23-8.77 30.52-22.45l31.64-101.06c5.91-20.77-2.89-43.08-21.64-54.39l-61.24-36.14 31.31-78.28 20.27 41.43c8 16.34 24.92 26.89 43.11 26.89H384c17.67 0 32-14.33 32-32s-14.33-31.99-32-31.99z"/></svg>`;
 
 export const REDO = "initiative-tracker-redo";
 const REDO_ICON = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="redo" class="svg-inline--fa fa-redo fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z"/></svg>`;

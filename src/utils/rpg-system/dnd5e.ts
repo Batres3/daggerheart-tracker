@@ -88,13 +88,13 @@ export class Dnd5eRpgSystem extends RpgSystem {
         const xp = getFromCreatureOrBestiary(
             this.plugin,
             creature,
-            (c) => c?.xp ?? 0
+            (c) => c?.atk ?? 0
         );
         if (xp) return xp;
         const cr = getFromCreatureOrBestiary(
             this.plugin,
             creature,
-            (c) => c?.cr ?? "0"
+            (c) => c?.atk ?? "0"
         );
         return XP_PER_CR[cr] ?? 0;
     }
@@ -106,7 +106,7 @@ export class Dnd5eRpgSystem extends RpgSystem {
         const cr = getFromCreatureOrBestiary(
             this.plugin,
             creature,
-            (c) => c?.cr ?? 0
+            (c) => c?.atk ?? 0
         );
         return [`${crToString(cr)} CR`];
     }

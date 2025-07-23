@@ -3,7 +3,7 @@
 
     import CreatureTemplate from "./Creature.svelte";
 
-    import { AC, DICE, HP, META_MODIFIER } from "src/utils";
+    import { DC, DICE, HP, STRESS, META_MODIFIER } from "src/utils";
     import { Creature, getId } from "src/utils/creature";
     import { createEventDispatcher } from "svelte";
     import { dndzone } from "svelte-dnd-action";
@@ -25,8 +25,11 @@
     const hpIcon = (node: HTMLElement) => {
         setIcon(node, HP);
     };
-    const acIcon = (node: HTMLElement) => {
-        setIcon(node, AC);
+    const stressIcon = (node: HTMLElement) => {
+        setIcon(node, STRESS);
+    };
+    const dcIcon = (node: HTMLElement) => {
+        setIcon(node, DC);
     };
     const flipDurationMs = 300;
     function handleDndConsider(
@@ -68,15 +71,10 @@
 <table class="initiative-tracker-table">
     {#if $ordered.length}
         <thead class="tracker-table-header">
-            <td
-                style="width: 10%;"
-                use:diceIcon
-                aria-label="Re-Roll Initiatives"
-                on:click={(evt) => tracker.roll(plugin)}
-            />
             <th class="left" style="width:55%">Name</th>
+            <th style="width:15%" use:dcIcon class="center" />
             <th style="width:15%" use:hpIcon class="center" />
-            <th style="width:15%" use:acIcon class="center" />
+            <th style="width:15%" use:stressIcon class="center" />
             <th style="width:5%" />
         </thead>
         <tbody
@@ -93,14 +91,14 @@
                 <tr
                     class="draggable initiative-tracker-creature"
                     class:disabled={!creature.enabled}
-                    class:active={$state && creature.active}
+                    class:active={$state && creature.spotlight}
                     class:viewing={creature.viewing}
                     class:friendly={creature.friendly}
                     animate:flip={{ duration: flipDurationMs }}
-                    data-hp={creature.hp}
-                    data-hp-max={creature.current_max}
+                    data-hp={creature.hp.current}
+                    data-hp-max={creature.hp.max}
                     data-hp-percent={Math.round(
-                        ((creature.hp ?? 0) / creature.max) * 100
+                        creature.hp.percent()
                     )}
                     on:click={(e) => {
                         dispatch("open-combatant", creature);

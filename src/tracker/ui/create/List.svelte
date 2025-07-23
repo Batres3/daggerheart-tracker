@@ -1,12 +1,12 @@
 <script lang="ts">
     import { ExtraButtonComponent, setIcon } from "obsidian";
     import {
-        AC,
+        DC,
         DEFAULT_UNDEFINED,
         FRIENDLY,
         HIDDEN,
         HP,
-        INITIATIVE,
+        STRESS,
         RANDOM_HP
     } from "src/utils";
     import type { Creature } from "src/utils/creature";
@@ -14,7 +14,6 @@
 
     export let adding: Writable<Array<[Creature, number]>>;
     export let editing: Writable<Creature>;
-    export let rollHP: boolean;
 
     const minusIcon = (node: HTMLElement, creature: Creature) => {
         new ExtraButtonComponent(node).setIcon("minus");
@@ -41,17 +40,14 @@
         $adding.splice(index, 1);
         $adding = $adding;
     };
+    const dc = (node: HTMLElement) => {
+        setIcon(node, DC);
+    };
     const heart = (node: HTMLElement) => {
         setIcon(node, HP);
     };
-    const random = (node: HTMLElement) => {
-        setIcon(node, RANDOM_HP);
-    };
-    const ac = (node: HTMLElement) => {
-        setIcon(node, AC);
-    };
-    const init = (node: HTMLElement) => {
-        setIcon(node, INITIATIVE);
+    const brain = (node: HTMLElement) => {
+        setIcon(node, STRESS);
     };
     const hidden = (node: HTMLElement) => {
         setIcon(node, HIDDEN);
@@ -89,20 +85,16 @@
                     </div>
                 </div>
                 <small class="creature-data">
-                    <span>
-                        {creature.hp ?? DEFAULT_UNDEFINED}
-                        {#if rollHP}
-                            <span use:random />
-                        {:else}
-                            <span use:heart />
-                        {/if}
                         <span>
-                            {creature.ac ?? DEFAULT_UNDEFINED}
-                            <span use:ac />
+                            {creature.dc.max ?? DEFAULT_UNDEFINED}
+                            <span use:dc />
                         </span>
                         <span>
-                            {creature.initiative ?? DEFAULT_UNDEFINED}
-                            <span use:init />
+                            {creature.hp.max ?? DEFAULT_UNDEFINED}
+                            <span use:heart />
+                        <span>
+                            {creature.stress.max ?? DEFAULT_UNDEFINED}
+                            <span use:brain />
                         </span>
                         {#if creature.hidden}
                             <span use:hidden />

@@ -34,14 +34,9 @@
             .onClick(async () => {
                 if (!$adding.length && !isEditing && !Platform.isMobile) return;
                 if (isEditing) {
-                    if ($editing.hp != creature.max) {
-                        creature.max = creature.current_max = $editing.hp;
+                    if ($editing.hp != creature.hp.max) {
+                        creature.hp.set_max($editing.hp);
                     }
-                    if (creature.dirty_ac) {
-                        creature.current_ac = $editing.ac;
-                        creature.dirty_ac = false;
-                    }
-
                     tracker.replace(creature, $editing);
                 } else {
                     const creatures = $adding.flatMap(([creature, amount]) => {
@@ -81,15 +76,6 @@
         {#if !isEditing && !Platform.isMobile}
             <div class="creator-list">
                 <List {adding} {editing} {rollHP} />
-                <div>
-                    <input
-                        type="checkbox"
-                        name="roll-hp"
-                        id="roll-hp"
-                        bind:checked={rollHP}
-                    />
-                    <label for="roll-hp">Roll for HP</label>
-                </div>
             </div>
         {/if}
     </div>

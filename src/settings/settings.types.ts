@@ -9,7 +9,6 @@ export interface InitiativeTrackerData {
     displayDifficulty: boolean;
     preferStatblockLink: boolean;
     statuses: Condition[];
-    unconsciousId: string;
     openState: {
         battle: boolean;
         party: boolean;
@@ -32,6 +31,7 @@ export interface InitiativeTrackerData {
     state: InitiativeViewState;
     encounters: { [key: string]: InitiativeViewState };
     condense: boolean;
+    massiveDamage: boolean;
     clamp: boolean;
     hpOverflow: string;
     additiveTemp: boolean;

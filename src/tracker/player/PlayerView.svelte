@@ -3,7 +3,7 @@
     import { fade } from "svelte/transition";
     import { SyncLoader } from "svelte-loading-spinners";
 
-    import { AC, FRIENDLY, HP, INITIATIVE } from "src/utils";
+    import { DC, FRIENDLY, HP, STRESS } from "src/utils";
     import type { Creature } from "src/utils/creature";
     import { createEventDispatcher } from "svelte";
 
@@ -13,8 +13,11 @@
     const hpIcon = (node: HTMLElement) => {
         setIcon(node, HP);
     };
-    const acIcon = (node: HTMLElement) => {
-        setIcon(node, AC);
+    const stressIcon = (node: HTMLElement) => {
+        setIcon(node, STRESS);
+    };
+    const dcIcon = (node: HTMLElement) => {
+        setIcon(node, DC);
     };
     const iniIcon = (node: HTMLElement) => {
         setIcon(node, INITIATIVE);

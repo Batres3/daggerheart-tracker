@@ -20,8 +20,8 @@ import {
 import { PLAYER_VIEW_VIEW } from "./utils/constants";
 import type { InitiativeTrackerData } from "./settings/settings.types";
 import type { InitiativeViewState } from "./tracker/view.types";
-import type { HomebrewCreature } from "./types/creatures";
-import type { SRDMonster } from "./types/creatures";
+import type { HomebrewCreature, SRDMonster } from "./types/creatures";
+import { srd_from_statblocks } from "./types/creatures";
 import InitiativeTrackerSettings from "./settings/settings";
 import { EncounterBlock, EncounterParser } from "./encounter";
 import EncounterLine from "./encounter/ui/EncounterLine.svelte";
@@ -61,30 +61,9 @@ export default class InitiativeTracker extends Plugin {
         return false;
     }
 
-    getInitiativeValue(modifier: number | number[] = 0): number {
-        const defaultIfNoResult =
-            Math.floor(Math.random() * 19 + 1) +
-            [modifier].flat().reduce((a, b) => a + b, 0);
-        if (!this.canUseDiceRoller) {
-            return defaultIfNoResult;
-        }
-        let dice = this.data.initiative;
-        if (typeof modifier == "number") {
-            dice = dice.replace(/%mod\d?%/g, `${modifier}`);
-        } else {
-            for (let i = 0; i < modifier.length; i++) {
-                dice = dice.replace(`%mod${i + 1}%`, `${modifier[i]}`);
-            }
-        }
-        const roller = this.getRoller(dice);
-        const initiative = roller?.rollSync() ?? defaultIfNoResult;
-        if (isNaN(initiative)) return defaultIfNoResult;
-        return initiative;
-    }
-
     getPlayerByName(name: string) {
         if (!this.players.has(name)) return new Creature({ name });
-        return Creature.from(this.players.get(name));
+        return this.players.get(name);
     }
     getPlayerNamesForParty(party: string): string[] {
         return this.data.parties?.find((p) => p.name === party)?.players ?? [];
@@ -109,7 +88,7 @@ export default class InitiativeTracker extends Plugin {
     }
     get statblock_creatures() {
         if (!window.FantasyStatblocks) return [];
-        return window.FantasyStatblocks.getBestiaryCreatures() as SRDMonster[];
+        return window.FantasyStatblocks.getBestiaryCreatures().map(srd_from_statblocks) as SRDMonster[];
     }
     get bestiary() {
         return this.statblock_creatures.filter(
@@ -185,11 +164,9 @@ export default class InitiativeTracker extends Plugin {
                 this.canUseStatBlocks &&
                 window.FantasyStatblocks.hasCreature(name)
             ) {
-                return window.FantasyStatblocks.getCreatureFromBestiary(
-                    name
-                ) as SRDMonster;
+                return srd_from_statblocks(window.FantasyStatblocks.getCreatureFromBestiary(name));
             }
-        } catch (e) {}
+        } catch (e) { }
         return null;
     }
     getCreatureFromBestiary(name: string) {
@@ -421,12 +398,12 @@ export default class InitiativeTracker extends Plugin {
                     if (!frontmatter) return;
                     for (let player of players) {
                         const { ac, hp, modifier, level, name } = frontmatter;
-                        player.ac = ac;
+                        player.dc = ac;
                         player.hp = hp;
-                        player.modifier = modifier;
+                        player.atk = modifier;
                         player.level = level;
                         player.name = name ? name : player.name;
-                        player["statblock-link"] =
+                        player.statblock_link =
                             frontmatter["statblock-link"];
 
                         this.playerCreatures.set(
@@ -437,15 +414,15 @@ export default class InitiativeTracker extends Plugin {
                             const creature = tracker
                                 .getOrderedCreatures()
                                 .find((c) => c.name == player.name);
-                            if (creature) {
-                                tracker.updateCreatures({
-                                    creature,
-                                    change: {
-                                        set_max_hp: player.hp,
-                                        ac: player.ac
-                                    }
-                                });
-                            }
+                            // if (creature) {
+                            //     tracker.updateCreatures({
+                            //         creature,
+                            //         change: {
+                            //             set_max_hp: player.hp,
+                            //             ac: player.ac
+                            //         }
+                            //     });
+                            // }
                         }
                     }
                 })
@@ -601,7 +578,7 @@ export default class InitiativeTracker extends Plugin {
                     } catch (e) {
                         new Notice(
                             "There was an issue launching the encounter.\n\n" +
-                                (e as Error).message
+                            (e as Error).message
                         );
                         console.error(e);
                         return;

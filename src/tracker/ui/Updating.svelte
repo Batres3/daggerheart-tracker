@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ExtraButtonComponent, TextComponent, setIcon } from "obsidian";
     import type InitiativeTracker from "src/main";
-    import { AC, HP, REMOVE, TAG } from "src/utils";
+    import { DC, HP, STRESS, REMOVE, TAG } from "src/utils";
     import { ConditionSuggestionModal } from "src/utils/suggester";
     import { getContext } from "svelte";
     import { getId } from "src/utils/creature";
@@ -16,8 +16,11 @@
     const hpIcon = (node: HTMLElement) => {
         setIcon(node, HP);
     };
-    const acIcon = (node: HTMLElement) => {
-        setIcon(node, AC);
+    const stressIcon = (node: HTMLElement) => {
+        setIcon(node, STRESS);
+    };
+    const dcIcon = (node: HTMLElement) => {
+        setIcon(node, DC);
     };
     const tagIcon = (node: HTMLElement) => {
         setIcon(node, TAG);
@@ -35,8 +38,9 @@
     const cancelIcon = (node: HTMLElement) => {
         setIcon(node, "cross-in-box");
     };
-    let damage: string = "";
-    let ac: string = "";
+    let damage: string = null;
+    let dc: string = null;
+    let stress: string = null;
     let status: string = null;
     $: {
         if (statusBtn) statusBtn.setDisabled(!status);
@@ -89,19 +93,20 @@
             addStatus();
         });
     };
-    function init(el: HTMLInputElement, target: "hp" | "ac") {
+    function init(el: HTMLInputElement, target: "hp" | "dc" | "stress") {
         if ($updateTarget == target) el.focus();
     }
     const performUpdate = (perform: boolean) => {
         if (perform) {
-            tracker.doUpdate(damage ?? "", $statuses, ac);
+            tracker.doUpdate(damage, dc, stress, $statuses);
         } else {
             tracker.clearUpdate();
         }
 
         damage = null;
         status = null;
-        ac = null;
+        dc = null;
+        stress = null;
         $statuses = [];
         modal = null;
 
@@ -119,13 +124,13 @@
                 <div class="hp-status">
                     {#if plugin.data.beginnerTips}
                         <small class="label">
-                            Apply damage, (-)healing, (t)temp HP, or (m)max HP
+                            Apply damage, (-)healing
                         </small>
                     {/if}
                     <div class="input">
                         <tag
                             use:hpIcon
-                            aria-label="Apply damage, (-)healing, (t)temp HP, or (m)max HP"
+                            aria-label="Apply damage, (-)healing"
                             style="margin: 0 0.2rem 0 0.7rem"
                         />
                         <input
@@ -200,20 +205,20 @@
                     {/if}
                 </div>
             </div>
-        {:else}
+        {:else if $updateTarget == "dc"}
             <div class="hp-status">
                 {#if plugin.data.beginnerTips}
-                    <small class="label"> Set AC </small>
+                    <small class="label"> Set Difficulty </small>
                 {/if}
                 <div class="input">
                     <tag
-                        use:acIcon
-                        aria-label="Set or (+/-)modify the AC of creatures"
+                        use:dcIcon
+                        aria-label="Set or (+/-)modify the Difficulty of creatures"
                         style="margin: 0 0.2rem 0 0.7rem"
                     />
                     <input
                         type="text"
-                        bind:value={ac}
+                        bind:value={dc}
                         on:focus={function () {
                             // Resolves bug caused by condition select modal not closing
                             modal = null;
@@ -227,7 +232,38 @@
                                 return;
                             }
                         }}
-                        use:init={"ac"}
+                        use:init={"dc"}
+                    />
+                </div>
+            </div>
+        {:else if $updateTarget == "stress"}
+            <div class="hp-status">
+                {#if plugin.data.beginnerTips}
+                    <small class="label"> Mark Stress, (-)healing </small>
+                {/if}
+                <div class="input">
+                    <tag
+                        use:stressIcon
+                        aria-label="Modify (+/-) the Stress of creatures"
+                        style="margin: 0 0.2rem 0 0.7rem"
+                    />
+                    <input
+                        type="text"
+                        bind:value={stress}
+                        on:focus={function () {
+                            // Resolves bug caused by condition select modal not closing
+                            modal = null;
+                        }}
+                        on:keydown={function (evt) {
+                            if (evt.key == "Tab") {
+                                return true;
+                            }
+                            if (evt.key == "Enter" || evt.key == "Escape") {
+                                performUpdate(evt.key == "Enter");
+                                return;
+                            }
+                        }}
+                        use:init={"stress"}
                     />
                 </div>
             </div>
