@@ -138,34 +138,37 @@ function createTracker() {
             creature.name = change.name;
             creature.number = 0;
         }
+        if (change.stress) {
+            if (creature.stress.current + change.stress < 0) {
+                let delta = creature.stress.current + change.stress;
+                change.stress = -creature.stress.current;
+                creature.hp.current = Number(creature.hp.current) + delta;
+            }
+            creature.stress.current = Number(creature.stress.current) + Number(change.stress);
+        }
         if (change.damage) {
             if (change.damage < 0) {
                 change.damage = -1 * creature.thresholds.compare(Math.abs(Number(change.damage)), _settings.massiveDamage)
             }
-            // Clamp HP at 0 if clamp is enabled in settings
-            if (_settings.clamp && creature.hp.current + change.damage < 0) {
-                change.damage = -creature.hp.current;
-            }
             creature.hp.current = Number(creature.hp.current) + Number(change.damage);
-            if (_settings.autoStatus && creature.hp.current <= 0) {
+        }
+        if (_settings.autoStatus) {
+            if (creature.stress.current <= 0) {
+                const unc = _settings.statuses.find(
+                    (s) => s.id == "Vulnerable"
+                );
+                if (unc) creature.addCondition(unc);
+            }
+            if (creature.hp.current <= 0) {
                 const unc = _settings.statuses.find(
                     (s) => s.id == "Dead"
                 );
                 if (unc) creature.addCondition(unc);
             }
         }
-        if (change.stress) {
-            // Clamp Stress at 0 if clamp is enabled in settings
-            if (_settings.clamp && creature.stress.current + change.stress < 0) {
-                change.stress = -creature.stress.current;
-            }
-            creature.stress.current = Number(creature.stress.current) + Number(change.stress);
-            if (_settings.autoStatus && creature.stress.current <= 0) {
-                const unc = _settings.statuses.find(
-                    (s) => s.id == "Vulnerable"
-                );
-                if (unc) creature.addCondition(unc);
-            }
+        if (_settings.clamp) {
+            if (creature.hp.current < 0) creature.hp.current = 0;
+            if (creature.stress.current < 0) creature.stress.current = 0;
         }
         if (change.dc) {
             creature.dc.current = Number(change.dc);
