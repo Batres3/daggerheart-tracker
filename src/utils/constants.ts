@@ -61,7 +61,7 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     },
     hpOverflow: OVERFLOW_TYPE.ignore,
     additiveTemp: false,
-    rpgSystem: "dnd5e",
+    rpgSystem: "Daggerheart",
     logging: false,
     logFolder: "/",
     resolveTies: RESOLVE_TIES.playerFirst,

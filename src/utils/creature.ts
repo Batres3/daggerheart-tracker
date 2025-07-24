@@ -25,7 +25,8 @@ export class Creature {
     note: string;
     enabled: boolean = true;
     hidden: boolean = false;
-    level: number;
+    type: string;
+    tier: number;
     player: boolean;
     status: Set<Condition> = new Set();
     marker: string;
@@ -61,7 +62,8 @@ export class Creature {
         this.thresholds = creature.thresholds;
         this.atk = creature.atk;
         this.note = creature.note;
-        this.level = creature.level;
+        this.tier = creature.tier;
+        this.type = creature.type;
         this.player = creature.player;
         this.marker = creature.marker;
         this.source = creature.source;
@@ -129,7 +131,8 @@ export class Creature {
         this.dc = new Resource(creature.dc);
 
         this.note = creature.note;
-        this.level = creature.level;
+        this.tier = creature.tier;
+        this.type = creature.type;
         this.player = creature.player;
         this.statblock_link = creature.statblock_link;
 
@@ -155,12 +158,13 @@ export class Creature {
             max_hp: this.hp.max,
             stress: this.stress.current,
             max_stress: this.stress.max,
+            tier: this.tier,
+            type: this.type,
             note: this.note,
             path: this.path,
             id: this.id,
             marker: this.marker,
             status: Array.from(this.status).map((c) => c.name),
-            level: this.level,
             player: this.player,
             enabled: this.enabled,
             hidden: this.hidden,
@@ -184,6 +188,8 @@ export class Creature {
         creature.stress = new Resource(state.max_stress, state.stress);
         creature.dc = new Resource(state.dc, state.current_dc);
         creature.thresholds = new Thresholds(state.major, state.severe);
+        creature.type = state.type;
+        creature.tier = state.tier;
 
         let statuses: Condition[] = [];
         for (const status of state.status) {

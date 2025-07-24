@@ -36,12 +36,7 @@
             (plugin.data.builder.showXP = !plugin.data.builder.showXP)}
     >
         <div class="title-container" slot="title">
-            <h5 class="title">Experience</h5>
-            <span>
-                {#if plugin.data.rpgSystem != RpgSystemSetting.Dnd5e}
-                    ({rpgSystem.displayName})
-                {/if}
-            </span>
+            <h5 class="title">Balancing</h5>
             {#if filtered > 0}
                 <span class="filtered"
                     >Filtering {filtered} allied creature{filtered > 1
@@ -71,23 +66,6 @@
                             )}</span
                         >
                     </div>
-                </div>
-                <div class="thresholds">
-                    {#each rpgSystem.getDifficultyThresholds(playerLevels) as budget}
-                        <div
-                            class="experience-threshold {budget.displayName.toLowerCase()} container"
-                        >
-                            <strong class="experience-name header">
-                                {budget.displayName}
-                            </strong>
-                            <span class="experience-amount">
-                                {rpgSystem.formatDifficultyValue(
-                                    budget.minValue,
-                                    true
-                                )}
-                            </span>
-                        </div>
-                    {/each}
                 </div>
                 <br />
             </div>
@@ -127,11 +105,6 @@
     .xp {
         display: flex;
         gap: 1rem;
-    }
-    .thresholds {
-        display: flex;
-        flex-flow: column;
-        gap: 0.5rem;
     }
     .experience-amount {
         margin-left: auto;

@@ -115,7 +115,6 @@ export interface HomebrewCreature {
     source?: string | string[];
     note?: string;
     path?: string;
-    level?: number;
     player?: boolean;
     marker?: string;
     id?: string;

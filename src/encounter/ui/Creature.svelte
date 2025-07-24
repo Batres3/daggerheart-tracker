@@ -10,8 +10,6 @@
 
     export let creature: Creature;
     export let count: string | number;
-    export let xp: number;
-    export let shouldShowRoll: boolean;
 
     const rollEl = (node: HTMLElement) => {
         setIcon(node, RANDOM_HP);
@@ -38,22 +36,7 @@
         {:else}
             {creature.name}{count == 1 ? "" : "s"}
         {/if}
-        {#if shouldShowRoll && creature.hit_dice?.length}
-            <span class="has-icon" aria-label="Rolling for HP" use:rollEl />
-        {/if}
     </span>
-    {#if xp}
-        <span class="xp-parent">
-            <span class="paren left">&nbsp;(</span>
-            <span class="xp-container">
-                <span class="xp number"
-                    >{rpgSystem.formatDifficultyValue(xp)}</span
-                >
-                <span class="xp text">{rpgSystem.valueUnit}</span>
-            </span>
-            <span class="paren right">)</span>
-        </span>
-    {/if}
 </div>
 
 <style>
@@ -73,8 +56,5 @@
     .has-icon {
         display: flex;
         align-items: center;
-    }
-    .xp-parent {
-        display: inline-flex;
     }
 </style>
