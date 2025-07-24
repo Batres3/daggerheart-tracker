@@ -1,22 +1,21 @@
-> 🥇 Our documentation has moved ***[here](https://plugins.javalent.com/it)***.
----
+This is an alternative to the **[Initiative Tracker Plugin](https://github.com/javalent/initiative-tracker/tree/main)** for use with the Daggerheart TTRPG, please see **[here](https://plugins.javalent.com/it)** for the original documentation.
 
-The Initiative Tracker plugin for **[Obsidian](https://obsidian.md)** allows you to keep track of initiative and turn order during combat encounters in tabletop role-playing games.
-
-With this plugin, you can add creatures and NPCs to the initiative tracker, and track their health, armor class, and other stats. The plugin also calculates experience points for creatures, and supports both custom and SRD creatures from the **[Fantasy Statblocks](https://github.com/javalent/fantasy-statblocks)** plugin.
+With this plugin, you can add creatures and NPCs to the tracker, and track their difficulty, health, stress, and other stats. The plugin also calculates battle points for encounters, and supports both custom and SRD creatures from the **[Fantasy Statblocks](https://github.com/javalent/fantasy-statblocks)** plugin.
 
 ## Features
 - Add and remove creatures from the encounter
-- Input creature name, HP, AC and initiative
-- Calculate creature XP based on level or challenge rating
-- Group identical creatures together to simplify the encounter
+- Input creature name, Difficulty, HP and Stress
+- Calculate encounter battle points according to the SRD rules
 - Set creature display names to differentiate identical creatures
 - Supports dice rolls to add random amount creatures
-- Keep track of creature HP, AC and status
-- Sort creatures by initiative automatically
+- Keep track of creature HP, Stress, Difficulty and status effects
+- Input the damage, the plugin automatically compares it with the thresholds to determine how much HP to remove
+- Automatically add the Vulnerable and Unconscious conditions upon reaching 0 Stress and HP, respectively
 - Add several encounters in one code block
 - Automatically save and load encounters
 - And much, much more...
+
+It is still missing support for party tracking (though it is much less necessary in this system) and support for environments
 
 ### Quickstart
 
@@ -43,7 +42,7 @@ If you encounter any issues, want to give back and help out, or have suggestions
 
 ### TTRPG plugins
 
-If you're using Obsidian to run/plan a TTRPG, you may find my other plugins useful:
+If you're using Obsidian to run/plan a TTRPG, you may find these other plugins by the original author useful
 
 - **[Obsidian Leaflet](https://github.com/valentine195/obsidian-leaflet-plugin)** Adds interactive maps to Obsidian notes
 - **[Dice Roller](https://github.com/valentine195/obsidian-dice-roller)** Inline dice rolling for Obsidian
