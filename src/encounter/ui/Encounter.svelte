@@ -21,8 +21,6 @@
 
     export let hide: string[] = [];
 
-    export let rollHP: boolean = plugin.data.rollHP;
-
     export let playerLevels: number[];
 
     let creatureMap: Map<Creature, number> = new Map();
@@ -90,7 +88,6 @@
             state: false,
             logFile: null,
             roll: true,
-            rollHP,
             newLog: true
         });
         plugin.app.workspace.revealLeaf(view.leaf);
@@ -117,7 +114,7 @@
                 creatures.push(plugin.getPlayerByName(player));
             }
         }
-        tracker.add(plugin, rollHP, ...creatures);
+        tracker.add(plugin, ...creatures);
     };
 
     const rollerEl = (node: HTMLElement, creature: Creature) => {
@@ -151,7 +148,6 @@
     };
 
     $: allRolling =
-        rollHP &&
         [...creatures.keys()].filter((c) => c.hit_dice?.length).length ==
             creatures.size;
 
@@ -212,7 +208,6 @@
                                         creature,
                                         playerLevels
                                     )}
-                                    shouldShowRoll={!allRolling && rollHP}
                                     {count}
                                 >
                                     <strong

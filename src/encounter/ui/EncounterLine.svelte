@@ -12,8 +12,6 @@
 
     export let plugin: InitiativeTracker;
 
-    export let rollHP: boolean = plugin.data.rollHP;
-
     const creatureMap: Map<Creature, number> = new Map();
     const rollerMap: Map<Creature, StackRoller> = new Map();
 
@@ -81,7 +79,7 @@
                 );
             })
             .flat();
-        tracker.add(plugin, rollHP, ...creatures);
+        tracker.add(plugin, ...creatures);
     };
 
     const rollerEl = (node: HTMLElement, creature: Creature) => {

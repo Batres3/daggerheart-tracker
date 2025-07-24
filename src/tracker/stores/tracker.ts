@@ -221,7 +221,6 @@ function createTracker() {
             name: get($name)!,
             round: get($round),
             logFile: _logger?.getLogFile() ?? null,
-            rollHP: false
         };
     };
 
@@ -500,14 +499,9 @@ function createTracker() {
 
         add: async (
             plugin: InitiativeTracker,
-            roll: boolean = plugin.data.rollHP,
             ...items: Creature[]
         ) =>
             updateAndSave((creatures) => {
-                if (plugin.canUseDiceRoller && roll) {
-                    setCreatureHP(items, plugin, roll);
-                }
-
                 creatures.push(...items);
                 _logger?.log(
                     _logger?.join(items.map((c) => c.name)),
@@ -592,13 +586,6 @@ function createTracker() {
                     creatures = tempCreatureArray;
                 }
                 setNumbers(creatures);
-                if (
-                    plugin.canUseDiceRoller &&
-                    (state?.rollHP ?? plugin.data.rollHP)
-                ) {
-                    setCreatureHP(creatures, plugin);
-                }
-
                 if (state?.logFile) {
                     _logger?.new(state.logFile).then(() => {
                         $logFile.set(_logger.getFile());
@@ -727,7 +714,6 @@ export const tracker = createTracker();
 function setCreatureHP(
     creatures: Creature[],
     plugin: InitiativeTracker,
-    rollHP = false
 ) {
     return;
 }

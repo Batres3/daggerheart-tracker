@@ -7,7 +7,6 @@ export interface InitiativeViewState {
     round: number;
     logFile: string;
     roll?: boolean;
-    rollHP?: boolean;
     timestamp?: number;
 }export interface InitiativeViewState {
     creatures: CreatureState[];
@@ -17,7 +16,6 @@ export interface InitiativeViewState {
     logFile: string;
     newLog?: boolean;
     roll?: boolean;
-    rollHP?: boolean;
     timestamp?: number;
 }
 

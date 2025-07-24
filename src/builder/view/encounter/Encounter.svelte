@@ -35,8 +35,6 @@
         $tempName = "";
     };
 
-    let rollHP = plugin.data.rollHP;
-
     $: items = [...$encounter.entries()];
 
     let startIcon: ExtraButtonComponent;
@@ -81,7 +79,6 @@
                     logFile: null,
                     newLog: true,
                     roll: true,
-                    rollHP
                 });
                 plugin.app.workspace.revealLeaf(view.leaf);
             });
@@ -135,7 +132,6 @@
                     name: encName,
                     round: 1,
                     roll: true,
-                    rollHP: plugin.data.rollHP,
                     logFile: null,
                     timestamp: Date.now()
                 });

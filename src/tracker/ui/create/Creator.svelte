@@ -14,8 +14,6 @@
     export let isEditing = false;
     export let creature: Creature = null;
 
-    let rollHP = plugin.data.rollHP;
-
     const adding = writable<Array<[Creature, number]>>([]);
     const editing = writable<Creature>(creature);
 
@@ -45,7 +43,7 @@
                         );
                     });
 
-                    tracker.add(plugin, rollHP, ...creatures);
+                    tracker.add(plugin, ...creatures);
                 }
                 if (creature?.player && creature?.path) {
                     const file = await plugin.app.vault.getAbstractFileByPath(
@@ -75,7 +73,7 @@
         <Create {plugin} {editing} {adding} {isEditing} />
         {#if !isEditing && !Platform.isMobile}
             <div class="creator-list">
-                <List {adding} {editing} {rollHP} />
+                <List {adding} {editing} />
             </div>
         {/if}
     </div>

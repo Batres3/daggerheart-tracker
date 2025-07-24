@@ -22,7 +22,6 @@ interface ParsedEncounter {
     name?: string;
     players?: string[];
     party?: string;
-    rollHP?: boolean;
     creatures?: Array<{ [key: number]: string } | string>;
 }
 
@@ -62,7 +61,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
                     "players",
                     "creatures",
                     "party",
-                    "rollHP",
                     "name"
                 ].filter((k) => !(k in this._encounter));
                 break;
@@ -169,19 +167,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
         const line = editor.getLine(cursor.line);
         //don't suggest anything for name
         if (/^name/.test(line)) return null;
-        if (/^rollHP:/.test(line)) {
-            this._context = SuggestContext.RollHP;
-            const [_, query] = line.match(/^rollHP:\s?(.*)$/);
-            if (query === "true" || query === "false") return null;
-            return {
-                end: cursor,
-                start: {
-                    ch: line.length - query.length,
-                    line: cursor.line
-                },
-                query
-            };
-        }
         if (/^party:/.test(line)) {
             this._context = SuggestContext.Party;
             const [_, query] = line.match(/^party:\s?(.*)$/);

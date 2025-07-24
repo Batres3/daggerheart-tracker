@@ -24,7 +24,6 @@
 
     setContext("plugin", plugin);
     export let headers: string[];
-    export let rollHP: boolean = plugin.data.rollHP;
 
     let creatureMap: Map<Creature, number> = new Map();
     const rollerMap: Map<Creature, StackRoller> = new Map();
@@ -82,7 +81,6 @@
                     logFile: null,
                     newLog: true,
                     roll: true,
-                    rollHP
                 });
                 plugin.app.workspace.revealLeaf(view.leaf);
             });
@@ -105,7 +103,7 @@
                 );
             })
             .flat();
-        tracker.add(plugin, rollHP, ...creatures);
+        tracker.add(plugin, ...creatures);
     };
 
     const rollerEl = (node: HTMLElement, creature: Creature) => {
@@ -163,7 +161,6 @@
                                     creature,
                                     playerLevels
                                 )}
-                                shouldShowRoll={rollHP}
                                 {count}
                             >
                                 <strong

@@ -257,25 +257,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     }
                 );
             });
-        new Setting(additionalContainer)
-            .setName("Roll HP for Creatures")
-            .setDesc(
-                createFragment((e) => {
-                    e.createSpan({
-                        text: "Creatures added to encounters will automatically roll for HP if the "
-                    });
-                    e.createEl("code", { text: "hit_dice" });
-                    e.createSpan({
-                        text: " property is set for the creature."
-                    });
-                })
-            )
-            .addToggle((t) => {
-                t.setValue(this.plugin.data.rollHP).onChange(async (v) => {
-                    this.plugin.data.rollHP = v;
-                    await this.plugin.saveSettings();
-                });
-            });
 
         new Setting(additionalContainer)
             .setName("Log Battles")

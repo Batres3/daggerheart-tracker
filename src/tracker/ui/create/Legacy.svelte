@@ -40,7 +40,6 @@
         }
         tracker.add(
             plugin,
-            plugin.data.rollHP,
             ...[...Array(amount).keys()].map((k) => Creature.new(creature))
         );
         creature = new Creature({});

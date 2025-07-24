@@ -53,14 +53,12 @@ export class API {
 
     addCreatures(
         creatures: HomebrewCreature[],
-        rollHP: boolean = this.plugin.data.rollHP
     ) {
         if (!creatures || !Array.isArray(creatures) || !creatures.length) {
             throw new Error("Creatures must be an array.");
         }
         this.#tracker.add(
             this.plugin,
-            rollHP,
             ...creatures.map((c) => Creature.from(c))
         );
     }
