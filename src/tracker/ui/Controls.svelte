@@ -14,7 +14,6 @@
         NEW,
         PLAY,
         REDO,
-        RollPlayerInitiativeBehavior,
         SAVE,
         STOP
     } from "src/utils";

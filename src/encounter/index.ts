@@ -205,7 +205,14 @@ export class EncounterParser {
         if (!isNaN(Number(number))) number = Number(number);
         if (number != 0 && !number) number = 1;
         if (typeof number == "number" && number < 1) number = 0;
-        let stats: CreatureStats;
+        let stats: CreatureStats = {
+            name: "",
+            dc: 0,
+            hp: 0,
+            stress: 0,
+            atk: 0,
+            hidden: false,
+        };
         if (typeof monster == "string") {
             if (monster.match(/,\s+hidden/)) {
                 stats.hidden = true;
@@ -221,7 +228,7 @@ export class EncounterParser {
                     .replace(/,\s*ally/, "");
             }
             stats.name = monster.split(/,\s?/)[0];
-            [stats.dc, stats.hp, stats.stress, stats.atk] = monster
+            [stats.dc, stats.hp, stats.stress] = monster
                 .split(/,\s?/)
                 .slice(1)
                 .map((v) => (isNaN(Number(v)) ? null : Number(v)));
@@ -245,7 +252,7 @@ export class EncounterParser {
                         (v) => v == "friend" || v == "friendly" || v == "ally"
                     ) != undefined;
 
-            [stats.dc, stats.hp, stats.stress, stats.atk] = monster
+            [stats.dc, stats.hp, stats.stress] = monster
                 .slice(1)
                 .filter(
                     (v) =>
@@ -256,7 +263,7 @@ export class EncounterParser {
                 )
                 .map((v) => (isNaN(Number(v)) ? null : Number(v)));
         } else if (typeof monster == "object") {
-            ({ creature: stats.name, name: stats.display, dc: stats.dc, hp: stats.hp, stress: stats.stress, atk: stats.atk } = monster);
+            ({ creature: stats.name, name: stats.display, dc: stats.dc, hp: stats.hp, stress: stats.stress } = monster);
             stats.hidden = monster.hidden || false;
             stats.friendly = monster.friend || monster.ally || false;
         }
@@ -268,8 +275,7 @@ export class EncounterParser {
         creature.display = stats.display;
         creature.dc.set(stats.dc);
         creature.hp.set(stats.hp);
-        creature.stress.set(stats.hp);
-        creature.atk = stats.atk ?? creature.atk;
+        creature.stress.set(stats.stress);
         creature.hidden = stats.hidden ?? creature.hidden;
         creature.friendly = stats.friendly ?? creature.friendly;
 

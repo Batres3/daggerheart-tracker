@@ -400,7 +400,6 @@ export default class InitiativeTracker extends Plugin {
                         const { ac, hp, modifier, level, name } = frontmatter;
                         player.dc = ac;
                         player.hp = hp;
-                        player.atk = modifier;
                         player.level = level;
                         player.name = name ? name : player.name;
                         player.statblock_link =

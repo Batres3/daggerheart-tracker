@@ -138,14 +138,14 @@
     const label = (creature: Creature) => {
         if (!creature) return;
         let label = [];
+        if (creature.dc) {
+            label.push(`DC: ${creature.dc.max}`);
+        }
         if (creature.hp) {
-            label.push(`HP: ${creature.hp}`);
+            label.push(`HP: ${creature.hp.max}`);
         }
-        if (creature.ac) {
-            label.push(`AC: ${creature.ac}`);
-        }
-        if (creature.modifier) {
-            label.push(`MOD: ${creature.modifier}`);
+        if (creature.stress) {
+            label.push(`STRESS: ${creature.stress.max}`);
         }
         return `${label.join(", ")}`;
     };
