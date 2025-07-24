@@ -115,14 +115,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                 })
             );
 
-            const div = containerEl.createDiv("coffee");
-            div.createEl("a", {
-                href: "https://www.buymeacoffee.com/valentine195"
-            }).createEl("img", {
-                attr: {
-                    src: "https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=valentine195&button_colour=e3e7ef&font_colour=262626&font_family=Inter&outline_colour=262626&coffee_colour=ff0000"
-                }
-            });
         } catch (e) {
             console.error(e);
             new Notice(
@@ -210,28 +202,15 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                 });
             });
         new Setting(additionalContainer)
-            .setName("Automatic Unconscious Status Application")
+            .setName("Automatic Status Application")
             .setDesc(
-                'When a creature takes damage that would reduce its HP below 0, it gains the "Unconscious" status effect.'
+                'Automatically apply status conditions like "Vulnerable" for 0 stress or "Dead" for 0 HP'
             )
             .addToggle((t) => {
                 t.setValue(this.plugin.data.autoStatus).onChange(async (v) => {
                     this.plugin.data.autoStatus = v;
                     await this.plugin.saveSettings();
                 });
-            });
-        new Setting(additionalContainer)
-            .setName("Additive Temporary HP")
-            .setDesc(
-                "Any temporary HP added to a creature will be added on top of existing temporary HP."
-            )
-            .addToggle((t) => {
-                t.setValue(this.plugin.data.additiveTemp).onChange(
-                    async (v) => {
-                        this.plugin.data.additiveTemp = v;
-                        await this.plugin.saveSettings();
-                    }
-                );
             });
         new Setting(additionalContainer)
             .setName("Display Player HP in Player View")
@@ -299,23 +278,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     this.plugin.data.logFolder = normalizePath(item.path);
                     await this.plugin.saveSettings();
                     this.display();
-                });
-            });
-        new Setting(additionalContainer)
-            .setName("Resolve Initiative Ties")
-            .setDesc(
-                "Define what happens if two creatures have the same initiative."
-            )
-            .addDropdown((d) => {
-                d.addOption(RESOLVE_TIES.playerFirst, "Player first");
-                d.addOption(RESOLVE_TIES.npcFirst, "NPC first");
-                d.addOption(RESOLVE_TIES.random, "Random");
-                d.setValue(
-                    this.plugin.data.resolveTies ?? RESOLVE_TIES.playerFirst
-                );
-                d.onChange(async (v) => {
-                    this.plugin.data.resolveTies = v;
-                    this.plugin.saveSettings();
                 });
             });
     }
@@ -965,54 +927,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             synced.nameEl.appendChild(createSpan({ text: "Synced" }));
         }
 
-        new Setting(containerEl)
-            .setName("Initiative Formula")
-            .setDesc(
-                createFragment((e) => {
-                    e.createSpan({
-                        text: "Initiative formula to use when calculating initiative. Use "
-                    });
-                    e.createEl("code", { text: "%mod%" });
-                    e.createSpan({
-                        text: " for the modifier placeholder."
-                    });
-                    if (!this.plugin.canUseDiceRoller) {
-                        e.createEl("br");
-                        e.createEl("br");
-                        e.createSpan({
-                            attr: {
-                                style: `color: var(--text-error);`
-                            },
-                            text: "Requires the "
-                        });
-                        e.createEl("a", {
-                            text: "Dice Roller",
-                            href: "https://github.com/valentine195/obsidian-dice-roller",
-                            cls: "external-link"
-                        });
-                        e.createSpan({
-                            attr: {
-                                style: `color: var(--text-error);`
-                            },
-                            text: " plugin to modify."
-                        });
-                    }
-                })
-            )
-            .addText((t) => {
-                if (!this.plugin.canUseDiceRoller) {
-                    t.setDisabled(true);
-                    this.plugin.data.initiative = "1d20 + %mod%";
-                }
-                t.setValue(this.plugin.data.initiative);
-                t.onChange((v) => {
-                    this.plugin.data.initiative = v;
-                });
-                t.inputEl.onblur = async () => {
-                    tracker.roll(this.plugin);
-                    await this.plugin.saveSettings();
-                };
-            });
     }
 }
 

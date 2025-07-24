@@ -97,8 +97,7 @@ function createTracker() {
         const sort = [...values];
         sort.sort((a, b) => {
             /* Order creatures in this order:
-               1. By manual order (drag & drop)
-               2. According to the resolveTies setting */
+               1. By manual order (drag & drop) */
             if (
                 a.manual_order !== null && a.manual_order !== undefined &&
                 b.manual_order !== null && b.manual_order !== undefined &&
@@ -108,21 +107,6 @@ function createTracker() {
                 const bOrder = b.manual_order || 0;
                 return aOrder - bOrder;
             }
-
-            switch (_settings.resolveTies) {
-                case RESOLVE_TIES.random:
-                    return Math.random() < 0.5 ? 1 : -1;
-                case RESOLVE_TIES.playerFirst:
-                case RESOLVE_TIES.npcFirst:
-                    const aPlayer = a.player ? 1 : 0;
-                    const bPlayer = b.player ? 1 : 0;
-                    if (_settings.resolveTies == RESOLVE_TIES.playerFirst) {
-                        return bPlayer - aPlayer
-                    } else {
-                        return aPlayer - bPlayer
-                    }
-            }
-
         });
         current_order = sort;
         return sort;

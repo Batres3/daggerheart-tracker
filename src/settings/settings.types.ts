@@ -33,12 +33,10 @@ export interface InitiativeTrackerData {
     massiveDamage: boolean;
     clamp: boolean;
     hpOverflow: string;
-    additiveTemp: boolean;
     autoStatus: boolean;
     warnedAboutImports: boolean;
     logging: boolean;
     logFolder: string;
-    resolveTies: string;
     useLegacy: boolean;
     diplayPlayerHPValues: boolean;
     builder: BuilderState;
