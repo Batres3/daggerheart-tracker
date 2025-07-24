@@ -92,18 +92,13 @@ function createTracker() {
     });
     let _settings: InitiativeTrackerData | null;
 
-    const condensed = derived(creatures, (values) => {
-        return values;
-    });
-
     let current_order: Creature[] = [];
-    const ordered = derived([condensed, data], ([values, data]) => {
+    const ordered = derived([creatures, data], ([values, data]) => {
         const sort = [...values];
         sort.sort((a, b) => {
             /* Order creatures in this order:
-               1. By initiative
-               2. By manual order (drag & drop)
-               3. According to the resolveTies setting */
+               1. By manual order (drag & drop)
+               2. According to the resolveTies setting */
             if (
                 a.manual_order !== null && a.manual_order !== undefined &&
                 b.manual_order !== null && b.manual_order !== undefined &&

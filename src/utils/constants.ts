@@ -43,7 +43,6 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
         round: null,
         logFile: null
     },
-    condense: false,
     clamp: true,
     massiveDamage: false,
     autoStatus: true,

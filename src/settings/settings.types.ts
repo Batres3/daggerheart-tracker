@@ -30,7 +30,6 @@ export interface InitiativeTrackerData {
     monsterMarker: string;
     state: InitiativeViewState;
     encounters: { [key: string]: InitiativeViewState };
-    condense: boolean;
     massiveDamage: boolean;
     clamp: boolean;
     hpOverflow: string;

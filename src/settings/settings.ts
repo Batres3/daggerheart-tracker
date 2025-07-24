@@ -160,17 +160,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     }
                 );
             });
-        new Setting(containerEl)
-            .setName("Roll Equivalent Creatures Together")
-            .setDesc(
-                "Equivalent creatures (same Name and AC) will roll the same initiative by default."
-            )
-            .addToggle((t) => {
-                t.setValue(this.plugin.data.condense).onChange(async (v) => {
-                    this.plugin.data.condense = v;
-                    await this.plugin.saveSettings();
-                });
-            });
 
         new Setting(containerEl)
             .setName("Embed statblock-link content in the Creature View")

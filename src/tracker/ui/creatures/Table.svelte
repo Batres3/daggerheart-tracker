@@ -40,22 +40,6 @@
     function handleDndFinalize(
         e: CustomEvent<GenericDndEvent<{ creature: Creature; id: string }[]>>
     ) {
-        if (e.detail.items.length > 1) {
-            let dropped = e.detail.items.find(
-                ({ id }) => id == e.detail.info.id
-            );
-            const index = e.detail.items.findIndex(
-                (c) => c.id == e.detail.info.id
-            );
-            if (index == e.detail.items.length - 1) {
-                dropped.creature.initiative =
-                    e.detail.items[index - 1].creature.initiative;
-            } else {
-                dropped.creature.initiative =
-                    e.detail.items[index + 1].creature.initiative;
-            }
-            tracker.logNewInitiative(dropped.creature);
-        }
         items = e.detail.items;
         $tracker = [...items.map(({ creature }, i) => {
             creature.manualOrder = i;

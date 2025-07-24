@@ -72,24 +72,6 @@
                 .onClick(() => tracker.reset());
         });
         menu.addItem((item) => {
-            item.setIcon(GROUP)
-                .setTitle(
-                    plugin.data.condense
-                        ? "Expand Creatures"
-                        : "Group Creatures"
-                )
-                .onClick(async () => {
-                    plugin.data.condense = !plugin.data.condense;
-                    await plugin.saveSettings();
-                    item.setIcon(plugin.data.condense ? EXPAND : GROUP);
-                    item.setTitle(
-                        plugin.data.condense
-                            ? "Expand Creatures"
-                            : "Group Creatures"
-                    );
-                });
-        });
-        menu.addItem((item) => {
             item.setTitle($sort ? "Sort Ascending" : "Sort Descending").onClick(
                 async () => {
                     plugin.data.descending = !plugin.data.descending;
