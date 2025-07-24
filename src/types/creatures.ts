@@ -66,6 +66,8 @@ export interface SRDMonster {
     hp: number;
     stress: number;
     atk: number
+    tier: number;
+    type: string;
     monster?: string;
     friendly?: boolean;
     hidden?: boolean;
@@ -90,6 +92,8 @@ export function srd_from_statblocks(item: Monster): SRDMonster {
         hp: item.hp as number,
         stress: item.stress as number,
         atk: Number(item.atk),
+        tier: Number(item.tier),
+        type: item.type,
         monster: item.monster as string ?? "",
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,
@@ -106,6 +110,8 @@ export interface HomebrewCreature {
     hp?: number;
     stress?: number;
     atk?: number
+    tier?: number;
+    type?: string;
     source?: string | string[];
     note?: string;
     path?: string;

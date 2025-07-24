@@ -433,18 +433,10 @@ const NAME_FILTER: StringFilter = {
 export const DEFAULT_FILTERS: Filter[] = [
     {
         type: FilterType.Range,
-        text: "CR",
-        fields: ["cr"],
-        options: [0, 30],
-        id: "ID_DEFAULT_CR_FILTER",
-        derive: true
-    },
-    {
-        type: FilterType.Options,
-        text: "Size",
-        fields: ["size"],
-        options: [],
-        id: "ID_DEFAULT_SIZE_FILTER",
+        text: "Tier",
+        fields: ["tier"],
+        options: [0, 4],
+        id: "ID_DEFAULT_TIER_FILTER",
         derive: true
     },
     {
@@ -455,29 +447,19 @@ export const DEFAULT_FILTERS: Filter[] = [
         id: "ID_DEFAULT_TYPE_FILTER",
         derive: true
     },
-    {
-        type: FilterType.Options,
-        text: "Alignment",
-        fields: ["alignment"],
-        options: [],
-        id: "ID_DEFAULT_ALIGNMENT_FILTER",
-        derive: true
-    }
 ];
 
 const ORIGINAL_DEFAULT_LAYOUT: FilterLayout = [
     {
-        nested: [{ id: "ID_DEFAULT_CR_FILTER", type: "filter" }],
-        id: "ID_DEFAULT_NESTED_CR",
+        nested: [{ id: "ID_DEFAULT_TIER_FILTER", type: "filter" }],
+        id: "ID_DEFAULT_NESTED_TIER",
         type: "nested"
     },
     {
         id: "ID_DEFAULT_NESTED_LAYOUT",
         type: "nested",
         nested: [
-            { id: "ID_DEFAULT_SIZE_FILTER", type: "filter" },
             { id: "ID_DEFAULT_TYPE_FILTER", type: "filter" },
-            { id: "ID_DEFAULT_ALIGNMENT_FILTER", type: "filter" }
         ]
     }
 ];

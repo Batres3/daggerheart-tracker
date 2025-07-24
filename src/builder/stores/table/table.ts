@@ -20,7 +20,7 @@ export class TableHeader {
         public field: string,
         public type: SortFunctions,
         public func?: string
-    ) {}
+    ) { }
     private _func: (a: SRDMonster, b: SRDMonster) => number =
         this.getSortByType();
     private getSortByType() {
@@ -73,8 +73,8 @@ export class TableHeader {
 
 export const DEFAULT_HEADERS: TableHeaderState[] = [
     {
-        text: "CR",
-        field: "cr",
+        text: "Tier",
+        field: "tier",
         type: SortFunctions.CONVERT_FRACTION
     },
     {
@@ -82,16 +82,6 @@ export const DEFAULT_HEADERS: TableHeaderState[] = [
         field: "type",
         type: SortFunctions.LOCAL_COMPARE
     },
-    {
-        text: "Size",
-        field: "size",
-        type: SortFunctions.LOCAL_COMPARE
-    },
-    {
-        text: "Alignment",
-        field: "alignment",
-        type: SortFunctions.LOCAL_COMPARE
-    }
 ];
 
 export const NAME_HEADER = TableHeader.fromState({

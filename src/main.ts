@@ -692,8 +692,7 @@ export default class InitiativeTracker extends Plugin {
     }
     async openCombatant(creature: Creature) {
         if (!this.canUseStatBlocks) return;
-        const view = this.combatant;
-        if (!view) {
+        if (!this.combatant) {
             const leaf = this.app.workspace.getRightLeaf(true);
             await leaf.setViewState({
                 type: CREATURE_TRACKER_VIEW
