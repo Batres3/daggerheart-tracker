@@ -16,7 +16,6 @@ import type { InitiativeViewState } from "../view.types";
 import {
     OVERFLOW_TYPE,
     RESOLVE_TIES,
-    RollPlayerInitiativeBehavior,
     getRpgSystem
 } from "src/utils";
 import type Logger from "../../logger/logger";
@@ -118,11 +117,6 @@ function createTracker() {
             creature.number = 0;
         }
         if (change.stress) {
-            if (creature.stress.current + change.stress < 0) {
-                let delta = creature.stress.current + change.stress;
-                change.stress = -creature.stress.current;
-                creature.hp.current = Number(creature.hp.current) + delta;
-            }
             creature.stress.current = Number(creature.stress.current) + Number(change.stress);
         }
         if (change.damage) {
@@ -130,6 +124,13 @@ function createTracker() {
                 change.damage = -1 * creature.thresholds.compare(Math.abs(Number(change.damage)), _settings.massiveDamage)
             }
             creature.hp.current = Number(creature.hp.current) + Number(change.damage);
+        }
+        if (_settings.clamp) {
+            if (creature.stress.current < 0) {
+                creature.hp.current = Number(creature.hp.current) + Number(creature.stress.current);
+                creature.stress.current = 0;
+            }
+            if (creature.hp.current < 0) creature.hp.current = 0;
         }
         if (_settings.autoStatus) {
             if (creature.stress.current <= 0) {
@@ -140,14 +141,10 @@ function createTracker() {
             }
             if (creature.hp.current <= 0) {
                 const unc = _settings.statuses.find(
-                    (s) => s.id == "Dead"
+                    (s) => s.id == _settings.unconsciousId
                 );
                 if (unc) creature.addCondition(unc);
             }
-        }
-        if (_settings.clamp) {
-            if (creature.hp.current < 0) creature.hp.current = 0;
-            if (creature.stress.current < 0) creature.stress.current = 0;
         }
         if (change.dc) {
             creature.dc.current = Number(change.dc);

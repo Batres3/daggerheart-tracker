@@ -20,9 +20,9 @@ export const Conditions: Condition[] = [
             "Restrained characters can’t move, but can still take actions from their current position"
     },
     {
-        name: "Dead",
-        id: "Dead",
+        name: "Unconscious",
+        id: "Unconscious",
         description:
-            "This character is dead, players get to make a Death Move"
+            "This character is unconscious, players get to make a Death Move"
     },
 ];
