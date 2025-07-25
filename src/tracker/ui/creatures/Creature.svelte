@@ -68,11 +68,7 @@
         {#if creature.friendly}
             <div class="centered-icon" use:friendlyIcon />
         {/if}
-        {#if creature.player}
-            <strong class="name player">{creature.name}</strong>
-        {:else}
             <span class="name">{name()}</span>
-        {/if}
     </div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="statuses" on:click={(e) => e.stopPropagation()}>

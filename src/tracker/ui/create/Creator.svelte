@@ -45,18 +45,6 @@
 
                     tracker.add(plugin, ...creatures);
                 }
-                if (creature?.player && creature?.path) {
-                    const file = await plugin.app.vault.getAbstractFileByPath(
-                        creature.path
-                    );
-                    if (file && file instanceof TFile)
-                        plugin.app.fileManager.processFrontMatter(file, (f) => {
-                            f.ac = creature.ac;
-                            f.hp = creature.max;
-                            f.level = creature.level;
-                            f.modifier = creature.modifier;
-                        });
-                }
                 dispatch("close");
             });
     };

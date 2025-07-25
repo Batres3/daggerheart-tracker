@@ -14,16 +14,6 @@
     if (
         encounters.some(
             (encounter) =>
-                !encounter.hide.includes("players") &&
-                ((typeof encounter.players == "boolean" && encounter.players) ||
-                    (encounter.players instanceof Array &&
-                        encounter.players.length))
-        )
-    )
-        headers.push("players");
-    if (
-        encounters.some(
-            (encounter) =>
                 !encounter.hide.includes("creatures") &&
                 encounter.creatures.size
         )
@@ -37,9 +27,6 @@
             <th>Name</th>
             {#if headers.includes("creatures")}
                 <th>Creatures</th>
-            {/if}
-            {#if headers.includes("players")}
-                <th>Players</th>
             {/if}
             {#if plugin.data.displayDifficulty}
                 <th>Difficulty</th>

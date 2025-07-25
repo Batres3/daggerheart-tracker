@@ -28,9 +28,6 @@
     }
     setContext("plugin", plugin);
 
-    onDestroy(() => {
-        players.empty();
-    });
 </script>
 
 <div class="initiative-tracker encounter-builder markdown-rendered">

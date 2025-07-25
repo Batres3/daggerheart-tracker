@@ -18,8 +18,6 @@
     import type { CreatureState, SRDMonster } from "src/types/creatures";
     import { writable } from "svelte/store";
 
-    const { players } = encounter;
-
     const plugin = getContext("plugin");
     let name = writable("Encounter");
     let tempName = writable("");
@@ -61,14 +59,7 @@
                         )
                     );
                 }
-                for (const creature of [
-                    ...$players.map(
-                        (p) =>
-                            plugin.getPlayerByName(p.name) ??
-                            CreatureCreator.from(p)
-                    ),
-                    ...creatures
-                ]) {
+                for (const creature of creatures) {
                     transformedCreatures.push(creature.toJSON());
                 }
                 tracker.new(plugin, {
@@ -117,7 +108,6 @@
         const saveEncounter = () => {
             try {
                 const creatures = [
-                    ...[...$players].map((p) => CreatureCreator.from(p)),
                     ...[...$encounter.entries()]
                         .map((c) =>
                             [...Array(c[1]).keys()].map(() =>
@@ -204,18 +194,13 @@
                 item.setTitle(enc.name).onClick(() => {
                     $name = enc.name;
                     encounter.empty();
-                    players.empty();
                     for (const creature of enc.creatures) {
-                        if (creature.player) {
-                            players.addFromState(creature);
-                        } else {
-                            encounter.add(
-                                CreatureCreator.fromJSON(
-                                    creature,
-                                    plugin
-                                ) as any as SRDMonster
-                            );
-                        }
+                        encounter.add(
+                            CreatureCreator.fromJSON(
+                                creature,
+                                plugin
+                            ) as any as SRDMonster
+                        );
                     }
                 });
             });
@@ -230,14 +215,10 @@
     const copy = async () => {
         const enc: {
             name?: string;
-            players?: string[];
             creatures?: { [key: number]: string }[];
         } = {};
         if ($name?.length) {
             enc.name = $name;
-        }
-        if ($players?.length) {
-            enc.players = $players.filter((p) => p.enabled).map((p) => p.name);
         }
         if ($encounter?.size) {
             enc.creatures = [...$encounter.entries()].map(([c, v]) => {

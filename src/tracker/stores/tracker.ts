@@ -64,8 +64,7 @@ function createTracker() {
                 _logger
                     ?.new({
                         name: get($name)!,
-                        players: current_order.filter((c) => c.player),
-                        creatures: current_order.filter((c) => !c.player),
+                        creatures: current_order,
                         round: get($round)
                     })
                     .then(() => {
@@ -259,10 +258,6 @@ function createTracker() {
                 updateCreature(creatures.find((c) => c.name == name), change);
                 return creatures;
             }),
-
-        players: derived(ordered, (creatures) =>
-            creatures.filter((c) => c.player)
-        ),
 
         setUpdate: (creature: Creature, evt: MouseEvent) =>
             updating.update((creatures) => {

@@ -55,8 +55,8 @@ export class EncounterParser {
     constructor(public plugin: InitiativeTracker) { }
     async parse(params: EncounterParameters): Promise<ParsedParams> {
         const name = params.name;
-        const party = this.plugin.data.parties.find(
-            (p) => p.name == params.party ?? this.plugin.data.defaultParty
+        const party = this.plugin.findParty(
+            params.party ?? this.plugin.data.defaultParty
         );
         const hide = this.parseHide(params);
         const rawMonsters = params.creatures ?? [];

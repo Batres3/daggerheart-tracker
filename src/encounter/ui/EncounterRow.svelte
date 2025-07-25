@@ -173,21 +173,6 @@
             </ul>
         </td>
     {/if}
-    {#if headers.includes("players")}
-        <td>
-            <ul class="encounter-players encounter-list">
-                {#if !hide.includes("players") && players instanceof Array && players.length}
-                    {#each players as player}
-                        <li>
-                            {player}
-                        </li>
-                    {/each}
-                {:else}
-                    -
-                {/if}
-            </ul>
-        </td>
-    {/if}
     {#if plugin.data.displayDifficulty}
         <td>
             <div class="encounter-xp difficulty">
