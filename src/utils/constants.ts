@@ -17,12 +17,6 @@ export const OVERFLOW_TYPE: { [key: string]: string } = {
     current: "current",
 };
 
-export const RESOLVE_TIES: { [key: string]: string } = {
-    playerFirst: "playerFirst",
-    npcFirst: "npcFirst",
-    random: "random",
-};
-
 export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     parties: [],
     defaultParty: null,
