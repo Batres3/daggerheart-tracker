@@ -54,7 +54,6 @@ export interface CreatureState extends HomebrewCreature {
     stress: number;
     max_stress: number;
     spotlight: boolean;
-    static: boolean;
     enabled: boolean;
 }
 

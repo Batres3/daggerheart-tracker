@@ -33,14 +33,11 @@ export const equivalent = (
 ) => {
     return (
         creature.name == existing.name &&
-        creature.display == existing.display &&
         creature.dc.max == existing.dc &&
         creature.hp.max == existing.hp &&
         creature.stress.max == existing.stress &&
-        creature.atk == existing.atk &&
         creature.hidden == existing.hidden &&
-        creature.friendly == existing.friendly &&
-        creature.static == existing.static
+        creature.friendly == existing.friendly
     );
 };
 

@@ -71,7 +71,7 @@ export class DaggerheartSystem extends RpgSystem {
         let displayName = "";
         if (remaining > 0) displayName = "Easy";
         else if (remaining < 0) displayName = "Hard";
-        else displayName == "Balanced";
+        else displayName = "Balanced";
 
         return {
             displayName: displayName,

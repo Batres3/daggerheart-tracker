@@ -66,10 +66,14 @@
             })
             .flat();
         const transformedCreatures: CreatureState[] = [];
+        for (const creature of [...creatures]) {
+            transformedCreatures.push(creature.toJSON());
+        }
 
         tracker.new(plugin, {
             creatures: transformedCreatures,
             name,
+            party: party.name,
             round: 1,
             state: false,
             logFile: null,

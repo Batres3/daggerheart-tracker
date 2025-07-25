@@ -12,7 +12,7 @@
     const dif = difficulty(plugin);
 </script>
 
-<div class="initiatie-tracker-metadata">
+<div class="initiative-tracker-metadata">
     <div class="initiative-tracker-name-container">
         {#if $name && $name.length}
             <h2 class="initiative-tracker-name">{$name}</h2>

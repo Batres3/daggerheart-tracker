@@ -29,7 +29,6 @@ export class Creature {
     tier: number;
     status: Set<Condition> = new Set();
     marker: string;
-    static: boolean = false;
     source: string | string[];
     id: string;
     viewing: boolean = false;
@@ -54,7 +53,6 @@ export class Creature {
     constructor(public creature: HomebrewCreature) {
         this.name = creature.name;
         this.display = creature.display;
-        this.static = creature.static ?? false;
         this.dc = new Resource(creature.dc);
         this.hp = new Resource(creature.hp);
         this.stress = new Resource(creature.stress);
@@ -91,7 +89,6 @@ export class Creature {
 
     *[Symbol.iterator]() {
         yield this.name;
-        yield this.static;
         yield this.atk;
         yield this.hp;
         yield this.stress;
@@ -145,7 +142,6 @@ export class Creature {
         return {
             name: this.name,
             display: this.display,
-            static: this.static,
             spotlight: this.spotlight,
             major: this.thresholds.major,
             severe: this.thresholds.severe,
@@ -170,7 +166,7 @@ export class Creature {
     }
 
     static fromJSON(state: CreatureState, plugin: InitiativeTracker) {
-        let creature: Creature;
+        let creature = new Creature(state);
         creature.enabled = state.enabled;
 
         creature.hp = new Resource(state.max_hp, state.hp);
