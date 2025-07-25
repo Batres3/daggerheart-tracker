@@ -17,14 +17,7 @@ export const OVERFLOW_TYPE: { [key: string]: string } = {
     current: "current",
 };
 
-export const RESOLVE_TIES: { [key: string]: string } = {
-    playerFirst: "playerFirst",
-    npcFirst: "npcFirst",
-    random: "random",
-};
-
 export const DEFAULT_SETTINGS: InitiativeTrackerData = {
-    players: [],
     parties: [],
     defaultParty: null,
     statuses: [...Conditions],
@@ -34,12 +27,12 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     initiative: "1d20 + %mod%",
     modifier: null,
     sync: false,
-    playerMarker: "default",
     monsterMarker: "default",
     state: {
         creatures: [],
         state: false,
         name: null,
+        party: undefined,
         round: null,
         logFile: null
     },
@@ -56,7 +49,6 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
         party: true,
         status: true,
         plugin: true,
-        player: true,
         builder: true
     },
     hpOverflow: OVERFLOW_TYPE.ignore,
@@ -64,7 +56,6 @@ export const DEFAULT_SETTINGS: InitiativeTrackerData = {
     logging: false,
     logFolder: "/",
     useLegacy: false,
-    diplayPlayerHPValues: true,
     descending: true,
     builder: {
         showParty: true,

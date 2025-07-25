@@ -10,8 +10,6 @@ import { Modal } from "obsidian";
 import copy from "fast-copy";
 import { getId } from "../../../utils/creature";
 
-export const playerCount = writable(0);
-
 export class TableHeader {
     public active: boolean;
     id = getId();

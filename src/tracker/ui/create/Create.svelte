@@ -130,11 +130,6 @@
             .setValue(creature.hidden)
             .onChange((v) => (creature.hidden = v));
     };
-    const staticToggle = (div: HTMLDivElement) => {
-        new ToggleComponent(div)
-            .setValue(creature.static)
-            .onChange((v) => (creature.static = v));
-    };
     const friendToggle = (div: HTMLDivElement) => {
         new ToggleComponent(div)
             .setValue(creature.friendly)

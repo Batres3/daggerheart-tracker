@@ -13,10 +13,8 @@ export interface InitiativeTrackerData {
         party: boolean;
         status: boolean;
         plugin: boolean;
-        player: boolean;
         builder: boolean;
     };
-    players: HomebrewCreature[];
     parties: Party[];
     defaultParty: string;
 
@@ -25,7 +23,6 @@ export interface InitiativeTrackerData {
     initiative: string;
     modifier: string;
     sync: boolean;
-    playerMarker: string;
     monsterMarker: string;
     state: InitiativeViewState;
     unconsciousId: string;
@@ -38,7 +35,6 @@ export interface InitiativeTrackerData {
     logging: boolean;
     logFolder: string;
     useLegacy: boolean;
-    diplayPlayerHPValues: boolean;
     builder: BuilderState;
     descending: boolean;
     version: number[];
@@ -48,6 +44,7 @@ export interface InputValidate {
     validate: (i: HTMLInputElement) => boolean;
 }
 export interface Party {
-    players: string[];
     name: string;
+    players: number;
+    level: number;
 }

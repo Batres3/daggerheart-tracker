@@ -1,9 +1,9 @@
 <script lang="ts">
     import { encounter } from "../../stores/encounter";
-    import { players } from "../../stores/players";
     import { RpgSystemSetting, getRpgSystem } from "src/utils";
     import { getContext } from "svelte";
     import Collapsible from "./Collapsible.svelte";
+    import { party } from "src/builder/stores/party.ts"
 
     const plugin = getContext("plugin");
 
@@ -25,8 +25,7 @@
         }
     }
 
-    $: playerLevels = $players.filter((p) => p.enabled).map((p) => p.level);
-    $: difficulty = rpgSystem.getEncounterDifficulty(enc, playerLevels);
+    $: difficulty = rpgSystem.getEncounterDifficulty(enc, $party);
 </script>
 
 <div class="xp-container">
@@ -70,7 +69,7 @@
                 <br />
             </div>
             <div class="budget">
-                {#each rpgSystem.getAdditionalDifficultyBudgets(playerLevels) as budget}
+                {#each rpgSystem.getAdditionalDifficultyBudgets($party) as budget}
                     <h5 class="experience-name">{budget.displayName}</h5>
                     <span class="experience-amount">
                         {rpgSystem.formatDifficultyValue(budget.minValue, true)}

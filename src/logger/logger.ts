@@ -7,7 +7,6 @@ import type { UpdateLogMessage } from "./logger.types";
 
 export interface LogState {
     name?: string;
-    players: Creature[];
     creatures: Creature[];
     round: number;
 }
@@ -66,26 +65,6 @@ export default class Logger {
             await this.log(
                 `**Combat started ${new Date().toLocaleString()}**\n\n`
             );
-            await this.log("## Players");
-            await this.log("| Player | Initiative | HP | Statuses |");
-            await this.log("| --- | :-: | :-: | :-: |");
-            for (const player of param.players) {
-                await this.log(
-                    "|",
-                    player.getName().replace("|", "\\|"),
-                    "|",
-                    player.hp ? `${player.hp.current}/${player.hp.max}` : "-",
-                    "|",
-                    [
-                        ...(player.status.size
-                            ? [...player.status].map((c) => c.name)
-                            : ["-"])
-                    ]
-                        .join(", ")
-                        .replace("|", "\\|"),
-                    "|"
-                );
-            }
             await this.log("## Creatures");
             await this.log("| Creature | Initiative  | HP | Statuses |");
             await this.log("| --- | :-: | :-: | :-: |");

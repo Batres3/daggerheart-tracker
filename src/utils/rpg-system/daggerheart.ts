@@ -1,17 +1,13 @@
 import { RpgSystem } from "./rpgSystem";
 import type { GenericCreature, DifficultyLevel, DifficultyThreshold } from ".";
 import InitiativeTracker from "src/main";
+import type { Party } from "src/settings/settings.types";
 
 function level_to_tier(level: number): number {
     if (level == 1) return 1;
     else if (level <= 4) return 2;
     else if (level <= 7) return 3;
     else return 4;
-}
-
-function average_tier(levels: number[]): number {
-    let tiers = levels.map(level_to_tier);
-    return Math.round(tiers.reduce((a, b) => a + b, 0) / tiers.length);
 }
 
 export class DaggerheartSystem extends RpgSystem {
@@ -27,8 +23,8 @@ export class DaggerheartSystem extends RpgSystem {
         this.displayName = "Daggerheart";
     }
 
-    getCreatureDifficulty(creature: GenericCreature, partyLevels: number[]): number {
-        if (creature.type == "Minion") return 1 / partyLevels.length;
+    getCreatureDifficulty(creature: GenericCreature, party: Party): number {
+        if (creature.type == "Minion") return 1 / party.players;
         if (creature.type == "Social" || creature.type == "Support") return 1;
         if (creature.type.startsWith("Horde") || creature.type == "Ranged"
             || creature.type == "Skulk" || creature.type == "Standard") return 2;
@@ -40,9 +36,12 @@ export class DaggerheartSystem extends RpgSystem {
 
     getAdditionalCreatureDifficultyStats(
         creature: GenericCreature,
-        playerLevels: number[]
+        party: Party
     ): string[] {
-        let tier = average_tier(playerLevels);
+        if (!party) {
+            party = { name: "", players: 0, level: 0 };
+        }
+        let tier = level_to_tier(party.level);
         if (creature.tier > tier) return ["Overleveled"];
         if (creature.tier < tier) return ["Underleveled"];
         return [];
@@ -50,13 +49,16 @@ export class DaggerheartSystem extends RpgSystem {
 
     getEncounterDifficulty(
         creatures: Map<GenericCreature, number>,
-        playerLevels: number[]
+        party: Party
     ): DifficultyLevel {
-        let budget = 3 * playerLevels.length + 2;
-        let player_tier = average_tier(playerLevels);
+        if (!party) {
+            party = { name: "", players: 0, level: 0 };
+        }
+        let budget = 3 * party.players + 2;
+        let player_tier = level_to_tier(party.level);
         let cost = Array.from(creatures.entries())
             .reduce((sum, [creature, number]) =>
-                this.getCreatureDifficulty(creature, playerLevels) * number + sum
+                this.getCreatureDifficulty(creature, party) * number + sum
                 , 0)
 
         let monsters = Array.from(creatures.keys());
@@ -69,7 +71,7 @@ export class DaggerheartSystem extends RpgSystem {
         let displayName = "";
         if (remaining > 0) displayName = "Easy";
         else if (remaining < 0) displayName = "Hard";
-        else displayName == "Balanced";
+        else displayName = "Balanced";
 
         return {
             displayName: displayName,
@@ -82,7 +84,7 @@ ${remaining} Battle Points remaining`,
         };
     }
 
-    getDifficultyThresholds(playerLevels: number[]): DifficultyThreshold[] {
+    getDifficultyThresholds(party: Party): DifficultyThreshold[] {
         return [
             {
                 displayName: "Hard",

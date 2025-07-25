@@ -1,4 +1,3 @@
-import type { Monster } from "@javalent/fantasy-statblocks";
 export class Thresholds {
     major: number;
     severe: number;
@@ -54,9 +53,7 @@ export interface CreatureState extends HomebrewCreature {
     stress: number;
     max_stress: number;
     spotlight: boolean;
-    static: boolean;
     enabled: boolean;
-    player: boolean;
 }
 
 export interface SRDMonster {
@@ -72,12 +69,11 @@ export interface SRDMonster {
     friendly?: boolean;
     hidden?: boolean;
     bestiary?: boolean;
-    player?: boolean;
 
     [key: string]: any;
 }
 
-export function srd_from_statblocks(item: Monster): SRDMonster {
+export function srd_from_statblocks(item: any): SRDMonster {
     let thresholds = null;
     if (item.thresholds == "None") {
         thresholds = new Thresholds(0, 0);
@@ -86,19 +82,18 @@ export function srd_from_statblocks(item: Monster): SRDMonster {
         thresholds = new Thresholds(Number(major), Number(severe));
     }
     return {
-        name: item.name,
+        name: item.name as string,
         thresholds: thresholds,
-        dc: item.difficulty as number,
-        hp: item.hp as number,
-        stress: item.stress as number,
+        dc: Number(item.difficulty),
+        hp: Number(item.hp),
+        stress: Number(item.stress),
         atk: Number(item.atk),
         tier: Number(item.tier),
-        type: item.type,
+        type: item.type as string,
         monster: item.monster as string ?? "",
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,
         bestiary: item.bestiary as boolean ?? true,
-        player: item.player as boolean ?? false,
     }
 }
 
@@ -115,7 +110,6 @@ export interface HomebrewCreature {
     source?: string | string[];
     note?: string;
     path?: string;
-    player?: boolean;
     marker?: string;
     id?: string;
     hidden?: boolean;

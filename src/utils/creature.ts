@@ -27,10 +27,8 @@ export class Creature {
     hidden: boolean = false;
     type: string;
     tier: number;
-    player: boolean;
     status: Set<Condition> = new Set();
     marker: string;
-    static: boolean = false;
     source: string | string[];
     id: string;
     viewing: boolean = false;
@@ -55,7 +53,6 @@ export class Creature {
     constructor(public creature: HomebrewCreature) {
         this.name = creature.name;
         this.display = creature.display;
-        this.static = creature.static ?? false;
         this.dc = new Resource(creature.dc);
         this.hp = new Resource(creature.hp);
         this.stress = new Resource(creature.stress);
@@ -64,7 +61,6 @@ export class Creature {
         this.note = creature.note;
         this.tier = creature.tier;
         this.type = creature.type;
-        this.player = creature.player;
         this.marker = creature.marker;
         this.source = creature.source;
         this.friendly = creature.friendly ?? this.friendly;
@@ -93,7 +89,6 @@ export class Creature {
 
     *[Symbol.iterator]() {
         yield this.name;
-        yield this.static;
         yield this.atk;
         yield this.hp;
         yield this.stress;
@@ -133,7 +128,6 @@ export class Creature {
         this.note = creature.note;
         this.tier = creature.tier;
         this.type = creature.type;
-        this.player = creature.player;
         this.statblock_link = creature.statblock_link;
 
         this.marker = creature.marker;
@@ -148,7 +142,6 @@ export class Creature {
         return {
             name: this.name,
             display: this.display,
-            static: this.static,
             spotlight: this.spotlight,
             major: this.thresholds.major,
             severe: this.thresholds.severe,
@@ -165,7 +158,6 @@ export class Creature {
             id: this.id,
             marker: this.marker,
             status: Array.from(this.status).map((c) => c.name),
-            player: this.player,
             enabled: this.enabled,
             hidden: this.hidden,
             friendly: this.friendly,
@@ -174,14 +166,7 @@ export class Creature {
     }
 
     static fromJSON(state: CreatureState, plugin: InitiativeTracker) {
-        let creature: Creature;
-        if (state.player) {
-            creature =
-                plugin.getPlayerByName(state.name) ??
-                new Creature(state);
-        } else {
-            creature = new Creature(state);
-        }
+        let creature = new Creature(state);
         creature.enabled = state.enabled;
 
         creature.hp = new Resource(state.max_hp, state.hp);

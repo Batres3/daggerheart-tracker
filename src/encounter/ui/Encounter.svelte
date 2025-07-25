@@ -4,6 +4,7 @@
 
     import { Creature } from "src/utils/creature";
     import type InitiativeTracker from "src/main";
+    import type { Party } from "src/settings/settings.types.ts"
     import { tracker } from "src/tracker/stores/tracker";
     import type { CreatureState } from "src/types/creatures";
     import CreatureComponent from "./Creature.svelte";
@@ -16,12 +17,9 @@
 
     export let name: string = "Encounter";
     export let creatures: Map<Creature, number | string> = new Map();
-    export let players: string[];
-    export let party: string = null;
+    export let party: Party = undefined;
 
     export let hide: string[] = [];
-
-    export let playerLevels: number[];
 
     let creatureMap: Map<Creature, number> = new Map();
     const rollerMap: Map<Creature, StackRoller> = new Map();
@@ -47,7 +45,7 @@
         }
     }
 
-    $: difficulty = rpgSystem.getEncounterDifficulty(creatureMap, playerLevels);
+    $: difficulty = rpgSystem.getEncounterDifficulty(creatureMap, party);
 
     const openButton = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon(START_ENCOUNTER);
@@ -68,22 +66,14 @@
             })
             .flat();
         const transformedCreatures: CreatureState[] = [];
-        const combinedPlayers = [
-            ...(party ? plugin.getPlayerNamesForParty(party) : []),
-            ...players
-        ];
-
-        const playersForEncounter: Creature[] = [];
-        for (const name of new Set(combinedPlayers)) {
-            playersForEncounter.push(plugin.getPlayerByName(name));
-        }
-
-        for (const creature of [...playersForEncounter, ...creatures]) {
+        for (const creature of [...creatures]) {
             transformedCreatures.push(creature.toJSON());
         }
+
         tracker.new(plugin, {
             creatures: transformedCreatures,
             name,
+            party: party.name,
             round: 1,
             state: false,
             logFile: null,
@@ -109,11 +99,6 @@
                 );
             })
             .flat();
-        for (const player of players) {
-            if (!$tracker.find((creature) => creature.name === player)) {
-                creatures.push(plugin.getPlayerByName(player));
-            }
-        }
         tracker.add(plugin, ...creatures);
     };
 
@@ -165,23 +150,14 @@
         </div>
     </div>
     <div class="creatures-container">
-        {#if !hide.includes("players")}
-            {#if players instanceof Array && players.length}
-                <div class="encounter-creatures encounter-players">
-                    <h4>{party ? party : "Players"}</h4>
-                    <ul>
-                        {#each players as player}
-                            <li>
-                                <span>{player}</span>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-            {:else if !players}
-                <div class="encounter-creatures encounter-players">
-                    <h4>No Players</h4>
-                </div>
-            {/if}
+        {#if party}
+            <div class="encounter-creatures encounter-players">
+                <h4>Party: {party.name}</h4>
+            </div>
+        {:else}
+            <div class="encounter-creatures encounter-players">
+                <h4>No Party</h4>
+            </div>
         {/if}
         <div class="encounter-creatures">
             {#if !hide.includes("creatures")}
@@ -206,7 +182,7 @@
                                     {creature}
                                     xp={rpgSystem.getCreatureDifficulty(
                                         creature,
-                                        playerLevels
+                                        party
                                     )}
                                     {count}
                                 >

@@ -19,14 +19,11 @@
     });
 
     $: {
-        if ($dif.thresholds.last().minValue > 0) {
-            difficultyBar.set(
-                Math.min(
-                    $dif.difficulty.value / $dif.thresholds.last().minValue,
-                    1
-                )
-            );
-        }
+        let percent = 0;
+        if ($dif.difficulty.value < 0) percent = 1;
+        else if ($dif.difficulty.value == 0) percent = 0.5;
+        else percent = 0;
+        difficultyBar.set(percent);
     }
     $: summary = $dif.difficulty.summary;
 </script>

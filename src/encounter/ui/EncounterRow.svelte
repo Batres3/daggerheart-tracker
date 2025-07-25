@@ -3,6 +3,7 @@
 
     import type InitiativeTracker from "src/main";
     import { tracker } from "src/tracker/stores/tracker";
+    import type { Party } from "src/settings/settings.types.ts"
     import {
         DEFAULT_UNDEFINED,
         getRpgSystem,
@@ -16,10 +17,9 @@
 
     export let name: string = "Encounter";
     export let creatures: Map<Creature, number | string>;
-    export let players: string[];
+    export let party: Party;
 
     export let hide: string[] = [];
-    export let playerLevels: number[];
     export let plugin: InitiativeTracker;
 
     setContext("plugin", plugin);
@@ -48,7 +48,7 @@
         }
     }
 
-    $: difficulty = rpgSystem.getEncounterDifficulty(creatureMap, playerLevels);
+    $: difficulty = rpgSystem.getEncounterDifficulty(creatureMap, party);
 
     const open = (node: HTMLElement) => {
         new ExtraButtonComponent(node)
@@ -69,12 +69,9 @@
                         );
                     })
                     .flat();
-                const playerList = players.map((p) =>
-                    plugin.getPlayerByName(p).toJSON()
-                );
 
                 tracker.new(plugin, {
-                    creatures: [...playerList, ...creatures],
+                    creatures: creatures,
                     name,
                     round: 1,
                     state: false,
@@ -159,7 +156,7 @@
                                 {creature}
                                 xp={rpgSystem.getCreatureDifficulty(
                                     creature,
-                                    playerLevels
+                                    party
                                 )}
                                 {count}
                             >
@@ -168,21 +165,6 @@
                                     use:rollerEl={creature}
                                 />
                             </CreatureComponent>
-                        </li>
-                    {/each}
-                {:else}
-                    -
-                {/if}
-            </ul>
-        </td>
-    {/if}
-    {#if headers.includes("players")}
-        <td>
-            <ul class="encounter-players encounter-list">
-                {#if !hide.includes("players") && players instanceof Array && players.length}
-                    {#each players as player}
-                        <li>
-                            {player}
                         </li>
                     {/each}
                 {:else}

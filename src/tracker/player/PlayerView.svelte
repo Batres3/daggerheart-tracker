@@ -77,11 +77,7 @@
                     class:center={true}
                     class={getHpStatus(creature.hp, creature.max).toLowerCase()}
                 >
-                    {#if creature.player && $data.diplayPlayerHPValues}
-                        <div class="center">{@html creature.hpDisplay}</div>
-                    {:else}
-                        <span>{getHpStatus(creature.hp, creature.max)}</span>
-                    {/if}
+                    <span>{getHpStatus(creature.hp, creature.max)}</span>
                 </td>
                 <td class="center">
                     {[...creature.status].map((s) => s.name).join(", ")}

@@ -11,11 +11,10 @@ import { equivalent } from "../../encounter";
 import { Events, Platform, TFile } from "obsidian";
 import type { UpdateLogMessage } from "src/logger/logger.types";
 import type { Condition } from "src/types/creatures";
-import type { InitiativeTrackerData } from "src/settings/settings.types";
+import type { InitiativeTrackerData, Party } from "src/settings/settings.types";
 import type { InitiativeViewState } from "../view.types";
 import {
     OVERFLOW_TYPE,
-    RESOLVE_TIES,
     getRpgSystem
 } from "src/utils";
 import type Logger from "../../logger/logger";
@@ -51,6 +50,8 @@ function createTracker() {
 
     const $logFile = writable<TFile | null>();
 
+    const $party = writable<string | null>(null);
+
     let _logger: Logger;
 
     const $round = writable<number>(1);
@@ -62,8 +63,7 @@ function createTracker() {
                 _logger
                     ?.new({
                         name: get($name)!,
-                        players: current_order.filter((c) => c.player),
-                        creatures: current_order.filter((c) => !c.player),
+                        creatures: current_order,
                         round: get($round)
                     })
                     .then(() => {
@@ -83,7 +83,6 @@ function createTracker() {
         });
     };
     const $name = writable<string | null>();
-    const $party = writable<string | null>();
 
     const data = writable<InitiativeTrackerData>();
     const descending = derived(data, (data) => {
@@ -124,6 +123,9 @@ function createTracker() {
                 change.damage = -1 * creature.thresholds.compare(Math.abs(Number(change.damage)), _settings.massiveDamage)
             }
             creature.hp.current = Number(creature.hp.current) + Number(change.damage);
+        }
+        if (_settings.hpOverflow == OVERFLOW_TYPE.ignore && creature.hp.current > creature.hp.max) {
+            creature.hp.current = creature.hp.max;
         }
         if (_settings.clamp) {
             if (creature.stress.current < 0) {
@@ -193,6 +195,7 @@ function createTracker() {
     const getEncounterState = (): InitiativeViewState => {
         return {
             creatures: get(creatures).map((c) => c.toJSON()),
+            party: get($party),
             state: get($state),
             name: get($name)!,
             round: get($round),
@@ -215,13 +218,10 @@ function createTracker() {
     const setNumbers = (list: Creature[]) => {
         for (let i = 0; i < list.length; i++) {
             const creature = list[i];
-            if (
-                creature.player ||
-                list.filter((c) => c.name == creature.name).length == 1
-            ) {
+            if (creature.number > 0) continue;
+            if (list.filter((c) => c.name == creature.name).length == 1) {
                 continue;
             }
-            if (creature.number > 0) continue;
             const prior = list
                 .filter((c) =>
                     c.display
@@ -258,10 +258,6 @@ function createTracker() {
                 updateCreature(creatures.find((c) => c.name == name), change);
                 return creatures;
             }),
-
-        players: derived(ordered, (creatures) =>
-            creatures.filter((c) => c.player)
-        ),
 
         setUpdate: (creature: Creature, evt: MouseEvent) =>
             updating.update((creatures) => {
@@ -366,16 +362,9 @@ function createTracker() {
 
         name: $name,
 
-        sort: descending,
-
         party: $party,
-        setParty: (party: string, plugin: InitiativeTracker) =>
-            updateAndSave((creatures) => {
-                const players = plugin.getPlayersForParty(party);
-                $party.set(party);
-                creatures = [...creatures.filter((c) => !c.player), ...players];
-                return creatures;
-            }),
+
+        sort: descending,
 
         state: $state,
         getState: () => get($state),
@@ -514,52 +503,13 @@ function createTracker() {
                 $round.set(state?.round ?? 1);
                 $state.set(state?.state ?? false);
                 $name.set(state?.name ?? null);
+                $party.set(state?.party ?? plugin.data.defaultParty);
 
-                if (!state?.creatures) {
-                    /**
-                     * New encounter button was clicked, only maintain the players.
-                     */
-                    creatures = creatures.filter((c) => c.player);
+                if (state?.creatures) {
+                    creatures = state?.creatures.map((c) => Creature.fromJSON(c, plugin));
                 } else {
-                    /**
-                     * Encounter is being started. Keep any pre-existing players that are incoming.
-                     */
-                    const tempCreatureArray: Creature[] = [];
-
-                    const party = get($party);
-                    const players = new Map(
-                        [
-                            ...(party ? plugin.getPlayersForParty(party) : []),
-                            ...creatures.filter((p) => p.player)
-                        ].map((c) => [c.id, c])
-                    ).values();
-                    for (const creature of state.creatures) {
-                        /* const ; */
-                        let existingPlayer: Creature | null = null;
-                        if (
-                            creature.player &&
-                            (existingPlayer = creatures.find(
-                                (c) => c.player && c.id === creature.id
-                            )) &&
-                            existingPlayer != null
-                        ) {
-                            tempCreatureArray.push(existingPlayer);
-                        } else {
-                            tempCreatureArray.push(
-                                Creature.fromJSON(creature, plugin)
-                            );
-                        }
-                    }
-                    for (const player of players) {
-                        if (
-                            !tempCreatureArray.find(
-                                (p) => p.player && p.id == player.id
-                            )
-                        ) {
-                            tempCreatureArray.push(player);
-                        }
-                    }
-                    creatures = tempCreatureArray;
+                    // New encounter
+                    creatures = [];
                 }
                 setNumbers(creatures);
                 if (state?.logFile) {
@@ -652,17 +602,13 @@ function createTracker() {
 
         difficulty: (plugin: InitiativeTracker) =>
             derived([creatures, data], ([values]) => {
-                const players: number[] = [];
                 const creatureMap = new Map<Creature, number>();
                 const rpgSystem = getRpgSystem(plugin);
+                const party = plugin.data.parties.find((p) => p.name == get($party));
 
                 for (const creature of values) {
                     if (!creature.enabled) continue;
                     if (creature.friendly) continue;
-                    if (creature.player && creature.level) {
-                        players.push(creature.level);
-                        continue;
-                    }
                     const stats = creature.get_stats();
                     const existing = [...creatureMap].find(([c]) =>
                         equivalent(c, stats)
@@ -673,12 +619,13 @@ function createTracker() {
                     }
                     creatureMap.set(existing[0], existing[1] + 1);
                 }
+                // console.log(creatureMap);
                 return {
                     difficulty: rpgSystem.getEncounterDifficulty(
                         creatureMap,
-                        players
+                        party
                     ),
-                    thresholds: rpgSystem.getDifficultyThresholds(players),
+                    thresholds: rpgSystem.getDifficultyThresholds(party),
                     labels: rpgSystem.systemDifficulties
                 };
             })
@@ -687,275 +634,3 @@ function createTracker() {
 
 export const tracker = createTracker();
 
-function setCreatureHP(
-    creatures: Creature[],
-    plugin: InitiativeTracker,
-) {
-    return;
-}
-
-/* export const tracker = new Tracker(); */
-//TODO
-// class Tracker {
-//     #bus = new Events();
-//
-//     #data: InitiativeTrackerData;
-//     #initiativeCallback: (modifier: number) => number;
-//     #initialized = false;
-//     /**
-//      * Initialize the tracker. The main plugin should be
-//      * the only thing to call this.
-//      */
-//     public initialize(
-//         data: InitiativeTrackerData,
-//         logger: Logger,
-//         initiativeCallback: (modifier: number) => number
-//     ) {
-//         this.#data = data;
-//         this.#initiativeCallback = initiativeCallback;
-//         this.#logger = logger;
-//         this.#initialized = true;
-//         this.#bus.trigger("initialized");
-//     }
-//     async isInitialized(): Promise<void> {
-//         return new Promise((resolve) => {
-//             if (this.#initialized) resolve();
-//             this.#bus.on("initialized", () => resolve());
-//         });
-//     }
-//
-//     /** All creatures in the encounter. Includes players. */
-//     #creatures = writable<Creature[]>([]);
-//     /** All creatures, ordered by initiative. */
-//     ordered = derived(this.#creatures, (values) => {
-//         const sort = [...values];
-//         this.#current_order = sort;
-//         return sort;
-//     });
-//     /** Static, non-store list. Populated during the order store update. */
-//     #current_order: Creature[] = [];
-//     /** Just players. */
-//     #players = derived(this.#creatures, (creatures) =>
-//         creatures.filter((c) => c.player)
-//     );
-//     /** Just combatants. */
-//     #combatants = derived(this.#creatures, (creatures) =>
-//         creatures.filter((c) => !c.player)
-//     );
-//     /** Enemies. */
-//     #enemies = derived(this.#combatants, (combatants) =>
-//         combatants.filter((c) => !c.friendly)
-//     );
-//     /** Allies */
-//     #allies = derived(this.#combatants, (combatants) =>
-//         combatants.filter((c) => c.friendly)
-//     );
-//
-//     /** Encounter state. */
-//     round = writable(1);
-//     active = writable(false);
-//     getState() {
-//         return get(this.active);
-//     }
-//     setState(state: boolean) {
-//         this.active.set(state);
-//         if (state) {
-//             if (!this.#logger.logging) {
-//                 this.#logger.new({
-//                     name: get(this.name)!,
-//                     players: this.#current_order.filter((c) => c.player),
-//                     creatures: this.#current_order.filter((c) => !c.player),
-//                     round: get(this.round)
-//                 });
-//             } else {
-//                 this.tryLog(`Combat re-started`);
-//             }
-//         } else {
-//             this.tryLog("Combat stopped");
-//         }
-//         this.#updateAndSave((creatures) => {
-//             if (creatures.length && !creatures.find((c) => c.spotlight)) {
-//                 this.#current_order[0].spotlight = true;
-//             }
-//             return creatures;
-//         });
-//     }
-//     name = writable<string | null>();
-//     party = writable<string | null>();
-//     getEncounterState(): InitiativeViewState {
-//         return {
-//             creatures: get(this.#creatures).map((c) => c.toJSON()),
-//             state: get(this.active),
-//             name: get(this.name)!,
-//             round: get(this.round),
-//             logFile: this.#logger?.getLogFile() ?? null,
-//             rollHP: false
-//         };
-//     }
-//     /**
-//      * The svelte store contract.
-//      * Expose the creature store, so this class can be
-//      * used directly as the creature store in svelte files.
-//      */
-//     subscribe = this.#creatures.subscribe;
-//     set = this.#creatures.set;
-//     update = this.#creatures.update;
-//     #updateAndSave(updater: Updater<Creature[]>) {
-//         this.update(updater);
-//         app.workspace.trigger(
-//             "initiative-tracker:save-state",
-//             this.getEncounterState()
-//         );
-//     }
-//
-//     new(state: InitiativeViewState) { }
-//     add(roll: boolean = this.#data.rollHP, ...items: Creature[]) { }
-//     remove(...items: Creature[]) { }
-//
-//     /**
-//      * Logging
-//      */
-//     #logger: Logger;
-//     tryLog(...msg: string[]) {
-//         if (this.#logger) {
-//             this.#logger.log(...msg);
-//         }
-//     }
-//
-//     /** Creature updates */
-//     updating = writable<Map<Creature, HPUpdate>>(new Map());
-//     updateTarget = writable<"ac" | "hp">();
-//     updateCreatures(...updates: CreatureUpdates[]) {
-//         this.#updateAndSave((creatures) => {
-//             return this.performCreatureUpdate(creatures, ...updates);
-//         });
-//     }
-//     performCreatureUpdate(
-//         creatures: Creature[],
-//         ...updates: CreatureUpdates[]
-//     ) {
-//         for (const { creature, change } of updates) {
-//             updateCreature(creature, change);
-//             if (!creatures.includes(creature)) {
-//                 creatures.push(creature);
-//             }
-//         }
-//         return creatures;
-//     }
-//     setUpdate(creature: Creature, evt: MouseEvent) {
-//         this.updating.update((creatures) => {
-//             if (creatures.has(creature)) {
-//                 creatures.delete(creature);
-//             } else {
-//                 creatures.set(creature, {
-//                     saved: evt.getModifierState("Shift"),
-//                     resist: evt.getModifierState(modifier),
-//                     customMod: evt.getModifierState("Alt") ? "2" : "1"
-//                 });
-//             }
-//             return creatures;
-//         });
-//     }
-//     doUpdate(
-//         toAddString: string,
-//         statuses: Condition[],
-//         ac: string,
-//         removeStatuses: Condition[]
-//     ) {
-//         this.updating.update((updatingCreatures) => {
-//             const messages: UpdateLogMessage[] = [];
-//             const updates: CreatureUpdates[] = [];
-//
-//             updatingCreatures.forEach((entry, creature) => {
-//                 const roundHalf = !toAddString.includes(".");
-//                 const change: CreatureUpdate = {};
-//                 const modifier =
-//                     (entry.saved ? 0.5 : 1) *
-//                     (entry.resist ? 0.5 : 1) *
-//                     Number(entry.customMod);
-//                 const name = [creature.name];
-//                 if (creature.number > 0) {
-//                     name.push(`${creature.number}`);
-//                 }
-//                 const message: UpdateLogMessage = {
-//                     name: name.join(" "),
-//                     hp: null,
-//                     temp: false,
-//                     max: false,
-//                     status: null,
-//                     remove_status: null,
-//                     saved: false,
-//                     unc: false,
-//                     ac: null,
-//                     ac_add: false
-//                 };
-//
-//                 if (toAddString.charAt(0) == "t") {
-//                     let toAdd = Number(toAddString.slice(1));
-//                     message.hp = toAdd;
-//                     message.temp = true;
-//                     change.temp = toAdd;
-//                 } else {
-//                     const maxHpDamage = toAddString.charAt(0) === "m";
-//                     let toAdd = Number(toAddString.slice(+maxHpDamage));
-//                     toAdd =
-//                         -1 *
-//                         Math.sign(toAdd) *
-//                         Math.max(Math.abs(toAdd) * modifier, 1);
-//                     toAdd = roundHalf ? Math.trunc(toAdd) : toAdd;
-//                     message.hp = toAdd;
-//                     if (maxHpDamage) {
-//                         message.max = true;
-//                         change.max = toAdd;
-//                     }
-//                     change.hp = toAdd;
-//                     if (creature.hp <= 0) {
-//                         message.unc = true;
-//                     }
-//                 }
-//                 if (statuses.length) {
-//                     message.status = statuses.map((s) => s.name);
-//                     if (!entry.saved) {
-//                         change.status = statuses;
-//                     } else {
-//                         message.saved = true;
-//                     }
-//                 }
-//                 if (removeStatuses.length) {
-//                     message.remove_status = removeStatuses.map((s) => s.name);
-//                     change.remove_status = removeStatuses;
-//                 }
-//                 if (ac) {
-//                     if (ac.charAt(0) == "+" || ac.charAt(0) == "-") {
-//                         const current_ac = parseInt(
-//                             String(creature.current_ac)
-//                         );
-//                         if (isNaN(current_ac)) {
-//                             creature.current_ac = creature.current_ac + ac;
-//                         } else {
-//                             creature.current_ac = current_ac + parseInt(ac);
-//                         }
-//                         message.ac_add = true;
-//                     } else {
-//                         creature.current_ac = ac.slice(
-//                             Number(ac.charAt(0) == "\\")
-//                         );
-//                     }
-//                     message.ac = ac.slice(Number(ac.charAt(0) == "\\"));
-//                 }
-//                 messages.push(message);
-//                 updates.push({ creature, change });
-//             });
-//             this.#logger?.logUpdate(messages);
-//             this.updateCreatures(...updates);
-//             updatingCreatures.clear();
-//             return updatingCreatures;
-//         });
-//     }
-//     clearUpdate() {
-//         this.updating.update((updates) => {
-//             updates.clear();
-//             return updates;
-//         });
-//     }
-// }

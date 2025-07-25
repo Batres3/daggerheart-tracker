@@ -102,7 +102,6 @@
     {:else}
         <div class="no-creatures">
             <p>Add a creature to get started!</p>
-            <small>Players may be created in settings.</small>
         </div>
     {/if}
 </table>
