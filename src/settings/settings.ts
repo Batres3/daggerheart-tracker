@@ -21,7 +21,6 @@ import {
     HP,
     STRESS,
     OVERFLOW_TYPE,
-    RESOLVE_TIES
 } from "../utils";
 import { RpgSystemSetting, getRpgSystem } from "../utils/rpg-system";
 import type { Party } from "./settings.types";
@@ -176,7 +175,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             )
             .addDropdown((d) => {
                 d.addOption(OVERFLOW_TYPE.ignore, "Ignore");
-                d.addOption(OVERFLOW_TYPE.temp, "Add to temp HP");
                 d.addOption(OVERFLOW_TYPE.current, "Add to current HP");
                 d.setValue(this.plugin.data.hpOverflow ?? OVERFLOW_TYPE.ignore);
                 d.onChange(async (v) => {

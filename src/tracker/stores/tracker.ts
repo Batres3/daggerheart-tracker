@@ -15,7 +15,6 @@ import type { InitiativeTrackerData, Party } from "src/settings/settings.types";
 import type { InitiativeViewState } from "../view.types";
 import {
     OVERFLOW_TYPE,
-    RESOLVE_TIES,
     getRpgSystem
 } from "src/utils";
 import type Logger from "../../logger/logger";
@@ -124,6 +123,9 @@ function createTracker() {
                 change.damage = -1 * creature.thresholds.compare(Math.abs(Number(change.damage)), _settings.massiveDamage)
             }
             creature.hp.current = Number(creature.hp.current) + Number(change.damage);
+        }
+        if (_settings.hpOverflow == OVERFLOW_TYPE.ignore && creature.hp.current > creature.hp.max) {
+            creature.hp.current = creature.hp.max;
         }
         if (_settings.clamp) {
             if (creature.stress.current < 0) {
