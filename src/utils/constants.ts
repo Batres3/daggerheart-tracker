@@ -24,7 +24,6 @@ export const RESOLVE_TIES: { [key: string]: string } = {
 };
 
 export const DEFAULT_SETTINGS: InitiativeTrackerData = {
-    players: [],
     parties: [],
     defaultParty: null,
     statuses: [...Conditions],

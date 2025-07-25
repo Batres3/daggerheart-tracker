@@ -1,7 +1,6 @@
 <script lang="ts">
     import type InitiativeTracker from "src/main";
     import { onDestroy, setContext } from "svelte";
-    import { players } from "../stores/players";
 
     import Creatures from "./creatures/Creatures.svelte";
     import Encounter from "./encounter/Encounter.svelte";

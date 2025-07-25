@@ -11,7 +11,7 @@ import { equivalent } from "../../encounter";
 import { Events, Platform, TFile } from "obsidian";
 import type { UpdateLogMessage } from "src/logger/logger.types";
 import type { Condition } from "src/types/creatures";
-import type { InitiativeTrackerData } from "src/settings/settings.types";
+import type { InitiativeTrackerData, Party } from "src/settings/settings.types";
 import type { InitiativeViewState } from "../view.types";
 import {
     OVERFLOW_TYPE,
@@ -51,6 +51,8 @@ function createTracker() {
 
     const $logFile = writable<TFile | null>();
 
+    const $party = writable<string | null>(null);
+
     let _logger: Logger;
 
     const $round = writable<number>(1);
@@ -83,7 +85,6 @@ function createTracker() {
         });
     };
     const $name = writable<string | null>();
-    const $party = writable<string | null>();
 
     const data = writable<InitiativeTrackerData>();
     const descending = derived(data, (data) => {
@@ -366,16 +367,9 @@ function createTracker() {
 
         name: $name,
 
-        sort: descending,
-
         party: $party,
-        setParty: (party: string, plugin: InitiativeTracker) =>
-            updateAndSave((creatures) => {
-                const players = plugin.getPlayersForParty(party);
-                $party.set(party);
-                creatures = [...creatures.filter((c) => !c.player), ...players];
-                return creatures;
-            }),
+
+        sort: descending,
 
         state: $state,
         getState: () => get($state),
@@ -515,52 +509,6 @@ function createTracker() {
                 $state.set(state?.state ?? false);
                 $name.set(state?.name ?? null);
 
-                if (!state?.creatures) {
-                    /**
-                     * New encounter button was clicked, only maintain the players.
-                     */
-                    creatures = creatures.filter((c) => c.player);
-                } else {
-                    /**
-                     * Encounter is being started. Keep any pre-existing players that are incoming.
-                     */
-                    const tempCreatureArray: Creature[] = [];
-
-                    const party = get($party);
-                    const players = new Map(
-                        [
-                            ...(party ? plugin.getPlayersForParty(party) : []),
-                            ...creatures.filter((p) => p.player)
-                        ].map((c) => [c.id, c])
-                    ).values();
-                    for (const creature of state.creatures) {
-                        /* const ; */
-                        let existingPlayer: Creature | null = null;
-                        if (
-                            creature.player &&
-                            (existingPlayer = creatures.find(
-                                (c) => c.player && c.id === creature.id
-                            )) &&
-                            existingPlayer != null
-                        ) {
-                            tempCreatureArray.push(existingPlayer);
-                        } else {
-                            tempCreatureArray.push(
-                                Creature.fromJSON(creature, plugin)
-                            );
-                        }
-                    }
-                    for (const player of players) {
-                        if (
-                            !tempCreatureArray.find(
-                                (p) => p.player && p.id == player.id
-                            )
-                        ) {
-                            tempCreatureArray.push(player);
-                        }
-                    }
-                    creatures = tempCreatureArray;
-                }
                 setNumbers(creatures);
                 if (state?.logFile) {
                     _logger?.new(state.logFile).then(() => {
@@ -652,17 +600,13 @@ function createTracker() {
 
         difficulty: (plugin: InitiativeTracker) =>
             derived([creatures, data], ([values]) => {
-                const players: number[] = [];
                 const creatureMap = new Map<Creature, number>();
                 const rpgSystem = getRpgSystem(plugin);
+                const party = plugin.data.parties.find((p) => p.name == get($party));
 
                 for (const creature of values) {
                     if (!creature.enabled) continue;
                     if (creature.friendly) continue;
-                    if (creature.player && creature.level) {
-                        players.push(creature.level);
-                        continue;
-                    }
                     const stats = creature.get_stats();
                     const existing = [...creatureMap].find(([c]) =>
                         equivalent(c, stats)
@@ -676,9 +620,9 @@ function createTracker() {
                 return {
                     difficulty: rpgSystem.getEncounterDifficulty(
                         creatureMap,
-                        players
+                        party
                     ),
-                    thresholds: rpgSystem.getDifficultyThresholds(players),
+                    thresholds: rpgSystem.getDifficultyThresholds(party),
                     labels: rpgSystem.systemDifficulties
                 };
             })

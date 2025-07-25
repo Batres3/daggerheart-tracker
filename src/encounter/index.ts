@@ -4,15 +4,15 @@ import { Creature } from "../utils/creature";
 
 import EncounterUI from "./ui/Encounter.svelte";
 import EncounterTable from "./ui/EncounterTable.svelte";
+import type { Party } from "src/settings/settings.types";
 
 type RawCreatureArray = string | Array<string | { [key: number]: string }>;
 type RawCreature = string | { [key: number]: string };
 type RawPlayers = boolean | "none" | string[];
 export interface EncounterParameters {
     name?: string;
-    players?: RawPlayers;
     party?: string;
-    hide?: "players" | "creatures" | string[];
+    hide?: "creatures" | string[];
     creatures?: RawCreatureArray;
 }
 export interface CreatureStats {
@@ -46,104 +46,42 @@ export const equivalent = (
 
 export interface ParsedParams {
     name: string;
-    players: string[];
-    party: string;
+    party: Party;
     hide: string[];
     creatures: Map<Creature, string | number>;
-    playerLevels: number[];
 }
 
 export class EncounterParser {
     constructor(public plugin: InitiativeTracker) { }
     async parse(params: EncounterParameters): Promise<ParsedParams> {
         const name = params.name;
-        const players: string[] = this.parsePlayers(params);
-        const party =
-            params.party ?? players.length
-                ? null
-                : this.plugin.data.defaultParty;
+        const party = this.plugin.data.parties.find(
+            (p) => p.name == params.party ?? this.plugin.data.defaultParty
+        );
         const hide = this.parseHide(params);
         const rawMonsters = params.creatures ?? [];
 
         let creatures = await this.parseRawCreatures(rawMonsters);
 
-        const playerLevels = players
-            .map((p) => this.plugin.getPlayerByName(p))
-            .map((p) => p.level)
-            .filter((p) => p && !isNaN(Number(p)));
-
         return {
             name,
-            players,
             party,
             hide,
             creatures,
-            playerLevels,
         };
     }
     parseHide(params: EncounterParameters): string[] {
         if (!("hide" in (params ?? {}))) return [];
         if (typeof params.hide == "string")
-            return ["creatures", "players"].filter((v) => params.hide == v);
+            return ["creatures"].filter((v) => params.hide == v);
         if (Array.isArray(params.hide))
-            return ["creatures", "players"].filter((v) =>
+            return ["creatures"].filter((v) =>
                 params.hide.includes(v)
             );
 
         return [];
     }
-    parsePlayers(params: EncounterParameters) {
-        const playersToReturn: string[] = [];
-        const players = params.players;
-        if (params.party) {
-            if (
-                this.plugin.data.parties.find(
-                    (p) => p.name.toLowerCase() == params.party.toLowerCase()
-                )
-            ) {
-                const party = this.plugin.data.parties.find(
-                    (p) => p.name.toLowerCase() == params.party.toLowerCase()
-                );
-                playersToReturn.push(...party.players);
-            }
-        }
-        if (players == "none" || players == false) {
-            playersToReturn.splice(0, playersToReturn.length);
-        } else if (players == true) {
-            playersToReturn.push(
-                ...[...this.plugin.players.values()].map((p) => p.name)
-            );
-        } else if (typeof players == "string") {
-            playersToReturn.push(players);
-        } else if (Array.isArray(players)) {
-            playersToReturn.push(
-                ...[...(this.plugin.players.values() ?? [])]
-                    .map((p) => p.name)
-                    .filter((p) =>
-                        (players as string[])
-                            .map((n) => n.toLowerCase())
-                            .includes(p.toLowerCase())
-                    )
-            );
-        }
-        if (!playersToReturn.length) {
-            let partyName = this.plugin.defaultParty?.name;
 
-            if (
-                partyName &&
-                this.plugin.data.parties.find(
-                    (p) => p.name.toLowerCase() == partyName.toLowerCase()
-                )
-            ) {
-                const party = this.plugin.data.parties.find(
-                    (p) => p.name.toLowerCase() == partyName.toLowerCase()
-                );
-                playersToReturn.push(...party.players);
-            }
-        }
-
-        return Array.from(new Set(playersToReturn));
-    }
     async parseRawCreatures(rawMonsters: RawCreatureArray) {
         const creatureMap: Map<Creature, number | string> = new Map();
         if (rawMonsters && Array.isArray(rawMonsters)) {
@@ -299,8 +237,6 @@ class EncounterComponent {
                 plugin: this.plugin,
                 name: this.params.name,
                 party: this.params.party,
-                players: this.params.players,
-                playerLevels: this.params.playerLevels,
                 creatures: this.params.creatures,
                 hide: this.params.hide,
             }

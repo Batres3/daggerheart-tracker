@@ -16,7 +16,6 @@ export interface InitiativeTrackerData {
         player: boolean;
         builder: boolean;
     };
-    players: HomebrewCreature[];
     parties: Party[];
     defaultParty: string;
 
@@ -48,6 +47,7 @@ export interface InputValidate {
     validate: (i: HTMLInputElement) => boolean;
 }
 export interface Party {
-    players: string[];
     name: string;
+    players: number;
+    level: number;
 }

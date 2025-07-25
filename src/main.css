@@ -242,6 +242,13 @@ body {
     justify-content: flex-end;
 }
 
+.initiative-tracker-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem; /* Optional: space between buttons */
+    margin-top: 1rem; /* Optional: spacing from other elements */
+}
+
 .initiative-tracker-textarea + .cm-editor {
     height: 200px;
     margin-bottom: 1rem;

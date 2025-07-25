@@ -7,11 +7,9 @@
     import { getContext } from "svelte";
     import { Creature as CreatureCreator } from "src/utils/creature";
 
-    const { players } = encounter;
-    const { average } = players;
-
     const plugin = getContext("plugin");
     const rpgSystem = getRpgSystem(plugin);
+    const party = plugin.defaultParty;
     const remove = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon("minus-circle");
     };
@@ -33,19 +31,14 @@
     const friendIcon = (node: HTMLElement) => {
         setIcon(node, FRIENDLY);
     };
+    $: difficulty = rpgSystem.getAdditionalCreatureDifficultyStats(creature, party);
+    $: insignificant =
+        difficulty.includes("Underleveled");
+    $: challenge =
+        difficulty.includes("Overleveled")
 
     export let count: number;
     export let creature: SRDMonster;
-    $: insignificant =
-        "cr" in creature &&
-        creature.cr &&
-        convertFraction(creature.cr) < $average - 3;
-    $: challenge =
-        "cr" in creature &&
-        creature.cr &&
-        convertFraction(creature.cr) > $average + 3;
-
-    $: playerLevels = $players.filter((p) => p.enabled).map((p) => p.level);
 
     const baby = (node: HTMLElement) => setIcon(node, "baby");
 
@@ -92,7 +85,7 @@
                 use:baby
                 aria-label={`${
                     count > 1 ? "These creatures are" : "This creature is"
-                } significantly under the average party level and might not contribute much to the fight.`}
+                } of a lower tier than the party and might not contribute much to the fight.`}
             />
         {/if}
         {#if challenge}
@@ -101,20 +94,20 @@
                 use:skull
                 aria-label={`${
                     count > 1 ? "These creatures are" : "This creature is"
-                } significantly over the average party level and might prove a challenge.`}
+                } of a higher tier than the party and might prove a challenge.`}
             />
         {/if}
     </div>
-    {#each rpgSystem.getAdditionalCreatureDifficultyStats(creature, playerLevels) as stat}
-        <div class="encounter-creature-context">
-            <span>{stat}</span>
-        </div>
-    {/each}
+    <!-- {#each rpgSystem.getAdditionalCreatureDifficultyStats(creature, party) as stat} -->
+    <!--     <div class="encounter-creature-context"> -->
+    <!--         <span>{stat}</span> -->
+    <!--     </div> -->
+    <!-- {/each} -->
     <div class="encounter-creature-context">
         <span>
             <Nullable
                 str={rpgSystem.formatDifficultyValue(
-                    rpgSystem.getCreatureDifficulty(creature, playerLevels),
+                    rpgSystem.getCreatureDifficulty(creature, party),
                     true
                 )}
             />

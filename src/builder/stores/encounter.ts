@@ -1,11 +1,9 @@
 import type { SRDMonster } from "src/types/creatures";
 import { writable } from "svelte/store";
-import { players } from "./players";
 function createEncounter() {
     const store = writable<Map<SRDMonster, number>>(new Map());
     const { subscribe, set, update } = store;
     return {
-        players,
         subscribe,
         add: (item: SRDMonster) =>
             update((monsters) => {

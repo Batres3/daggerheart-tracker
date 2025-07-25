@@ -56,7 +56,6 @@ export interface CreatureState extends HomebrewCreature {
     spotlight: boolean;
     static: boolean;
     enabled: boolean;
-    player: boolean;
 }
 
 export interface SRDMonster {
@@ -72,7 +71,6 @@ export interface SRDMonster {
     friendly?: boolean;
     hidden?: boolean;
     bestiary?: boolean;
-    player?: boolean;
 
     [key: string]: any;
 }
@@ -98,7 +96,6 @@ export function srd_from_statblocks(item: Monster): SRDMonster {
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,
         bestiary: item.bestiary as boolean ?? true,
-        player: item.player as boolean ?? false,
     }
 }
 
@@ -115,7 +112,6 @@ export interface HomebrewCreature {
     source?: string | string[];
     note?: string;
     path?: string;
-    player?: boolean;
     marker?: string;
     id?: string;
     hidden?: boolean;

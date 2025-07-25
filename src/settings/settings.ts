@@ -12,7 +12,6 @@ import {
 
 import type InitiativeTracker from "../main";
 
-import { PlayerSuggestionModal } from "../utils/suggester";
 import { FileInputSuggest, FolderInputSuggest } from "obsidian-utilities";
 import {
     DC,
@@ -55,16 +54,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                 };
             }
             this._displayBattle(
-                containerEl.createEl("details", {
-                    cls: "initiative-tracker-additional-container",
-                    attr: {
-                        ...(this.plugin.data.openState.player
-                            ? { open: true }
-                            : {})
-                    }
-                })
-            );
-            this._displayPlayers(
                 containerEl.createEl("details", {
                     cls: "initiative-tracker-additional-container",
                     attr: {
@@ -281,165 +270,7 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                 });
             });
     }
-    private _displayPlayers(additionalContainer: HTMLDetailsElement) {
-        additionalContainer.empty();
-        additionalContainer.ontoggle = () => {
-            this.plugin.data.openState.player = additionalContainer.open;
-        };
-        const summary = additionalContainer.createEl("summary");
-        new Setting(summary).setHeading().setName("Players");
-        summary.createDiv("collapser").createDiv("handle");
-        new Setting(additionalContainer)
-            .setName("Add New Player")
-            .setDesc(
-                "Players added here will be available to add to a party. If you do not have a party created, all players will be added to a new encounter."
-            )
-            .addButton((button: ButtonComponent): ButtonComponent => {
-                let b = button
-                    .setTooltip("Add Player")
-                    .setButtonText("+")
-                    .onClick(async () => {
-                        const modal = new NewPlayerModal(this.plugin);
-                        modal.open();
-                        modal.onClose = async () => {
-                            if (!modal.saved) return;
 
-                            await this.plugin.savePlayer({
-                                ...modal.player,
-                                player: true
-                            });
-
-                            this._displayPlayers(additionalContainer);
-                        };
-                    });
-
-                return b;
-            });
-        const additional = additionalContainer.createDiv("additional");
-        const playerView = additional.createDiv("initiative-tracker-players");
-        if (!this.plugin.players.size) {
-            additional
-                .createDiv({
-                    attr: {
-                        style: "display: flex; justify-content: center; padding-bottom: 18px;"
-                    }
-                })
-                .createSpan({
-                    text: "No saved players! Create one to see it here."
-                });
-        } else {
-            const headers = playerView.createDiv(
-                "initiative-tracker-player headers"
-            );
-
-            headers.createDiv({ text: "Name" });
-            setIcon(
-                headers.createDiv({
-                    attr: {
-                        "aria-label": "Level"
-                    }
-                }),
-                "swords"
-            );
-            setIcon(
-                headers.createDiv({
-                    attr: {
-                        "aria-label": "Max HP"
-                    }
-                }),
-                HP
-            );
-            setIcon(
-                headers.createDiv({
-                    attr: {
-                        "aria-label": "Difficulty"
-                    }
-                }),
-                DC
-            );
-            setIcon(
-                headers.createDiv({
-                    attr: {
-                        "aria-label": "Stress"
-                    }
-                }),
-                STRESS
-            );
-            headers.createDiv();
-
-            for (let player of this.plugin.data.players) {
-                const playerDiv = playerView.createDiv(
-                    "initiative-tracker-player"
-                );
-                playerDiv.createDiv({ text: player.name });
-                playerDiv.createDiv({
-                    text: `${player.level ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.hp ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.dc ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.atk ?? DEFAULT_UNDEFINED}`
-                });
-                const icons = playerDiv.createDiv(
-                    "initiative-tracker-player-icon"
-                );
-                new ExtraButtonComponent(icons.createDiv())
-                    .setIcon("pencil")
-                    .setTooltip("Edit")
-                    .onClick(() => {
-                        const modal = new NewPlayerModal(this.plugin, player);
-                        modal.open();
-                        modal.onClose = async () => {
-                            if (!modal.saved) return;
-                            await this.plugin.updatePlayer(
-                                player,
-                                modal.player
-                            );
-
-                            this._displayPlayers(additionalContainer);
-                        };
-                    });
-                new ExtraButtonComponent(icons.createDiv())
-                    .setIcon("trash")
-                    .setTooltip("Delete")
-                    .onClick(async () => {
-                        this.plugin.deletePlayer(player);
-
-                        await this.plugin.saveSettings();
-                        this._displayPlayers(additionalContainer);
-                    });
-            }
-            for (let [name, player] of this.plugin.statblock_players) {
-                const playerDiv = playerView.createDiv(
-                    "initiative-tracker-player"
-                );
-                playerDiv.createDiv({ text: name });
-                playerDiv.createDiv({
-                    text: `${player.level ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.hp ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.dc ?? DEFAULT_UNDEFINED}`
-                });
-                playerDiv.createDiv({
-                    text: `${player.atk ?? DEFAULT_UNDEFINED}`
-                });
-                const icons = playerDiv.createDiv({
-                    cls: "initiative-tracker-player-icon imported",
-                    attr: {
-                        "aria-label": "Imported from Fantasy Statblocks"
-                    }
-                });
-                setIcon(icons, "heart-handshake");
-            }
-        }
-    }
     private _displayBuilder(additionalContainer: HTMLDetailsElement) {
         additionalContainer.empty();
         additionalContainer.ontoggle = () => {
@@ -565,17 +396,17 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             "initiative-tracker-explanation"
         );
         explanation.createEl("span", {
-            text: "Parties allow you to create different groups of your players. Each player can be a member of multiple parties."
+            text: "Parties are defined by the number of players within them and the level of the party"
         });
         explanation.createEl("br");
         explanation.createEl("br");
         explanation.createEl("span", {
-            text: "You can set a default party for encounters to use, or specify the party for the encounter in the encounter block. While running an encounter in the tracker, you can change the active party, allowing you to quickly switch which players are in combat."
+            text: "You can set a default party for encounters to use, or specify the party for the encounter in the encounter block. The only use for parties is for tracking battle points"
         });
         new Setting(additionalContainer)
             .setName("Default Party")
             .setDesc(
-                "The tracker will load this party to encounters by default."
+                "This party will be used by default to track battle points."
             )
             .addDropdown((d) => {
                 d.addOption("none", "None");
@@ -643,7 +474,7 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             for (const party of this.plugin.data.parties) {
                 new Setting(additional)
                     .setName(party.name)
-                    .setDesc(party.players.join(", "))
+                    .setDesc(`${party.players} Players of level ${party.level}`)
                     .addExtraButton((b) => {
                         b.setIcon("pencil").onClick(() => {
                             const modal = new PartyModal(this.plugin, party);
@@ -930,209 +761,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
     }
 }
 
-class NewPlayerModal extends Modal {
-    player: HomebrewCreature;
-    saved: boolean;
-    constructor(
-        private plugin: InitiativeTracker,
-        private original: HomebrewCreature = {}
-    ) {
-        super(plugin.app);
-        this.player = { ...(original ?? {}) };
-    }
-    async display(load?: boolean) {
-        let { contentEl } = this;
-
-        contentEl.addClass("initiative-tracker-add-player-modal");
-
-        contentEl.empty();
-
-        let error = false;
-
-        contentEl.createEl("h2", {
-            text: this.original ? "Edit Player" : "New Player"
-        });
-
-        new Setting(contentEl)
-            .setName("Link to Note")
-            .setDesc("Link player to a note in your vault.")
-            .addText((t) => {
-                t.setValue(this.player.note ?? "");
-
-                let files = this.app.vault.getFiles();
-                const modal = new FileInputSuggest(this.app, t, files);
-                modal.onSelect(async ({ item: file }) => {
-                    if (!file) return;
-                    const metaData = this.app.metadataCache.getFileCache(file);
-
-                    this.player.note = file.basename;
-                    this.player.path = file.path;
-                    this.player.name = file.basename;
-
-                    if (!metaData || !metaData.frontmatter) return;
-                    const { ac, hp, modifier, level, name } =
-                        metaData.frontmatter;
-                    this.player.name = name ?? this.player.name;
-                    this.player.dc = parseInt(ac ?? this.player.dc, 10);
-                    this.player.hp = parseInt(hp ?? this.player.hp, 10);
-                    this.player.level = parseInt(
-                        level ?? this.player.level,
-                        10
-                    );
-                    this.player.atk = parseInt(
-                        modifier ?? this.player.atk,
-                        10
-                    );
-                    this.player.statblock_link =
-                        metaData.frontmatter["statblock-link"];
-                    this.display();
-                });
-            });
-
-        let nameInput: InputValidate,
-            levelInput: InputValidate,
-            hpInput: InputValidate,
-            modInput: InputValidate;
-
-        new Setting(contentEl)
-            .setName("Name")
-            .setDesc("Player name. Must be unique!")
-            .addText((t) => {
-                nameInput = {
-                    input: t.inputEl,
-                    validate: (i: HTMLInputElement) => {
-                        let error = false;
-                        if (
-                            (!i.value.length && !load) ||
-                            (this.plugin.players.has(i.value) &&
-                                this.player.name != this.original.name)
-                        ) {
-                            i.addClass("has-error");
-                            error = true;
-                        }
-                        return error;
-                    }
-                };
-                t.setValue(this.player.name ?? "");
-                t.onChange((v) => {
-                    t.inputEl.removeClass("has-error");
-                    this.player.name = v;
-                });
-            });
-        new Setting(contentEl)
-            .setName("Level")
-            .setDesc("Player level.")
-            .addText((t) => {
-                levelInput = {
-                    input: t.inputEl,
-                    validate: (i: HTMLInputElement) => {
-                        let error = false;
-                        if (isNaN(Number(i.value)) || Number(i.value) <= 0) {
-                            i.addClass("has-error");
-                            error = true;
-                        }
-                        return error;
-                    }
-                };
-                t.setValue(`${this.player.level ?? ""}`);
-                t.onChange((v) => {
-                    t.inputEl.removeClass("has-error");
-                    this.player.level = Number(v);
-                });
-            });
-        new Setting(contentEl).setName("Max Hit Points").addText((t) => {
-            hpInput = {
-                input: t.inputEl,
-                validate: (i: HTMLInputElement) => {
-                    let error = false;
-                    if (isNaN(Number(i.value))) {
-                        i.addClass("has-error");
-                        error = true;
-                    }
-                    return error;
-                }
-            };
-            t.setValue(`${this.player.hp ?? ""}`);
-            t.onChange((v) => {
-                t.inputEl.removeClass("has-error");
-                this.player.hp = Number(v);
-            });
-        });
-        new Setting(contentEl).setName("Armor Class").addText((t) => {
-            t.setValue(`${this.player.dc ?? ""}`);
-            t.onChange((v) => {
-                this.player.dc = Number(v);
-            });
-        });
-        new Setting(contentEl)
-            .setName("Initiative Modifier")
-            .setDesc("This will be added to randomly-rolled initiatives.")
-            .addText((t) => {
-                modInput = {
-                    input: t.inputEl,
-                    validate: (i) => {
-                        let error = false;
-                        if (isNaN(Number(i.value))) {
-                            t.inputEl.addClass("has-error");
-                            error = true;
-                        }
-                        return error;
-                    }
-                };
-                t.setValue(`${this.player.atk ?? ""}`);
-                t.onChange((v) => {
-                    this.player.atk = Number(v);
-                });
-            });
-
-        let footerEl = contentEl.createDiv();
-        let footerButtons = new Setting(footerEl);
-        footerButtons.addButton((b) => {
-            b.setTooltip("Save")
-                .setIcon("checkmark")
-                .onClick(async () => {
-                    let error = this.validateInputs(
-                        nameInput,
-                        hpInput,
-                        modInput
-                    );
-                    if (error) {
-                        new Notice("Fix errors before saving.");
-                        return;
-                    }
-                    this.saved = true;
-                    this.close();
-                });
-            return b;
-        });
-        footerButtons.addExtraButton((b) => {
-            b.setIcon("cross")
-                .setTooltip("Cancel")
-                .onClick(() => {
-                    this.saved = false;
-                    this.close();
-                });
-            return b;
-        });
-
-        this.validateInputs(nameInput, hpInput, modInput);
-    }
-    validateInputs(...inputs: InputValidate[]) {
-        let error = false;
-        for (let input of inputs) {
-            if (input.validate(input.input)) {
-                error = true;
-            } else {
-                input.input.removeClass("has-error");
-            }
-        }
-        return error;
-    }
-    onOpen() {
-        this.display(true);
-    }
-}
-
 import { App, ButtonComponent, Modal } from "obsidian";
 import { tracker } from "src/tracker/stores/tracker";
 import { getId } from "src/utils/creature";
@@ -1213,7 +841,6 @@ class StatusModal extends Modal {
             };
         }
     }
-    warned = false;
     onOpen() {
         this.titleEl.setText(this.editing ? "Edit Status" : "New Status");
         this.contentEl.empty();
@@ -1226,10 +853,8 @@ class StatusModal extends Modal {
                         this.plugin.data.statuses.find(
                             (s) => s.name == this.status.name
                         ) &&
-                        !this.warned &&
                         this.original != this.status.name
                     ) {
-                        this.warned = true;
                         name.setDesc(
                             createFragment((e) => {
                                 const container = e.createDiv(
@@ -1244,8 +869,7 @@ class StatusModal extends Modal {
                                 });
                             })
                         );
-                    } else if (this.warned) {
-                        this.warned = false;
+                    } else {
                         name.setDesc("");
                     }
                 });
@@ -1291,22 +915,30 @@ class StatusModal extends Modal {
                 );
         }
 
+        const buttonContainer = this.contentEl.createDiv("initiative-tracker-buttons");
+
         new ButtonComponent(
-            this.contentEl.createDiv("initiative-tracker-cancel")
+            buttonContainer.createDiv("initiative-tracker-cancel")
         )
             .setButtonText("Cancel")
             .onClick(() => {
                 this.canceled = true;
                 this.close();
             });
+        new ButtonComponent(
+            buttonContainer.createDiv("initiative-tracker-cancel")
+        )
+            .setButtonText("Save")
+            .onClick(() => {
+                this.close();
+            });
     }
 }
 
 class PartyModal extends Modal {
-    party: Party = { name: null, players: [] };
+    party: Party = { name: null, players: 0, level: 0 };
     canceled = false;
     editing = false;
-    warned = false;
     original: string;
     constructor(public plugin: InitiativeTracker, party?: Party) {
         super(plugin.app);
@@ -1315,7 +947,8 @@ class PartyModal extends Modal {
             this.original = party.name;
             this.party = {
                 name: party.name,
-                players: [...(party.players ?? [])]
+                players: party.players,
+                level: party.level
             };
         }
     }
@@ -1333,10 +966,8 @@ class PartyModal extends Modal {
                         this.plugin.data.parties.find(
                             (s) => s.name == this.party.name
                         ) &&
-                        !this.warned &&
                         this.original != this.party.name
                     ) {
-                        this.warned = true;
                         name.setDesc(
                             createFragment((e) => {
                                 const container = e.createDiv(
@@ -1351,83 +982,82 @@ class PartyModal extends Modal {
                                 });
                             })
                         );
-                    } else if (this.warned) {
-                        this.warned = false;
+                    } else {
                         name.setDesc("");
                     }
                 });
             });
 
-        const playersEl = this.contentEl.createDiv(
-            "initiative-tracker-additional-container"
-        );
-        let playerText: TextComponent;
-        new Setting(playersEl)
-            .setName("Add Player to Party")
+        const players = new Setting(this.contentEl)
+            .setName("Number of Players")
             .addText((t) => {
-                playerText = t;
-                const modal = new PlayerSuggestionModal(this.plugin.app, t, [
-                    ...this.plugin.players.values()
-                ]).onSelect(({ item }) => {
-                    t.setValue(item.name);
-                    modal.close();
-                });
-            })
-            .addExtraButton((b) =>
-                b.setIcon("plus-with-circle").onClick(() => {
-                    if (!playerText.getValue() || !playerText.getValue().length)
-                        return;
-                    if (this.party.players.includes(playerText.getValue())) {
-                        new Notice("That player is already in this party!");
-                        return;
-                    }
-                    if (!this.plugin.players.has(playerText.getValue())) {
-                        new Notice(
-                            "That player doesn't exist! You should make them first."
+                t.setValue("").onChange((v) => {
+                    const num = Number(v);
+                    if ((isNaN(num) || num <= 0)) {
+                        players.setDesc(
+                            createFragment((e) => {
+                                const container = e.createDiv(
+                                    "initiative-tracker-warning"
+                                );
+                                setIcon(
+                                    container,
+                                    "initiative-tracker-warning"
+                                );
+                                container.createSpan({
+                                    text: "Please enter a valid number of players (greater than 0)"
+                                });
+                            })
                         );
-                        return;
+                    } else {
+                        this.party.players = num;
+                        players.setDesc("");
                     }
-                    this.party.players.push(playerText.getValue());
-                    this.displayPlayers(playersDisplayEl);
-                    playerText.setValue("");
-                })
-            );
-        const playersDisplayEl = playersEl.createDiv("additional");
-        this.displayPlayers(playersDisplayEl);
+                });
+            });
+
+        const level = new Setting(this.contentEl)
+            .setName("Level of the party")
+            .addText((t) => {
+                t.setValue("").onChange((v) => {
+                    const num = Number(v);
+                    if ((isNaN(num) || num < 1 || num > 10)) {
+                        level.setDesc(
+                            createFragment((e) => {
+                                const container = e.createDiv(
+                                    "initiative-tracker-warning"
+                                );
+                                setIcon(
+                                    container,
+                                    "initiative-tracker-warning"
+                                );
+                                container.createSpan({
+                                    text: "Please enter a valid level (between 1 and 10)"
+                                });
+                            })
+                        );
+                    } else {
+                        this.party.level = num;
+                        level.setDesc("");
+                    }
+                });
+            });
+
+        const buttonContainer = this.contentEl.createDiv("initiative-tracker-buttons");
 
         new ButtonComponent(
-            this.contentEl.createDiv("initiative-tracker-cancel")
+            buttonContainer.createDiv("initiative-tracker-cancel")
         )
             .setButtonText("Cancel")
             .onClick(() => {
                 this.canceled = true;
                 this.close();
             });
-    }
-    displayPlayers(containerEl: HTMLDivElement) {
-        containerEl.empty();
-        if (this.party.players.length) {
-            for (const player of this.party.players) {
-                new Setting(containerEl).setName(player).addExtraButton((b) => {
-                    b.setIcon("trash").onClick(() => {
-                        this.party.players.splice(
-                            this.party.players.indexOf(player),
-                            1
-                        );
-                        this.displayPlayers(containerEl);
-                    });
-                });
-            }
-        } else {
-            containerEl
-                .createDiv({
-                    attr: {
-                        style: "display: flex; justify-content: center; padding-bottom: 18px;"
-                    }
-                })
-                .createSpan({
-                    text: "Add a player to the party to see it here."
-                });
-        }
+        new ButtonComponent(
+            buttonContainer.createDiv("initiative-tracker-cancel")
+        )
+            .setButtonText("Save")
+            .onClick(() => {
+                this.close();
+            });
     }
 }

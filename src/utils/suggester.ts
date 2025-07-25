@@ -25,21 +25,11 @@ export class SRDMonsterSuggestionModal extends FuzzyInputSuggest<
     }
 }
 export class ConditionSuggestionModal extends FuzzyInputSuggest<string> {
-    renderNote(noteEL: HTMLElement, result: FuzzyMatch<string>): void {}
+    renderNote(noteEL: HTMLElement, result: FuzzyMatch<string>): void { }
     renderTitle(titleEl: HTMLElement, result: FuzzyMatch<string>): void {
         this.renderMatches(titleEl, result.item, result.match.matches);
     }
     getItemText(item: string) {
         return item;
-    }
-}
-
-export class PlayerSuggestionModal extends FuzzyInputSuggest<Creature> {
-    renderNote(noteEL: HTMLElement, result: FuzzyMatch<Creature>): void {}
-    renderTitle(titleEl: HTMLElement, result: FuzzyMatch<Creature>): void {
-        this.renderMatches(titleEl, result.item.name, result.match.matches);
-    }
-    getItemText(item: Creature) {
-        return item.name;
     }
 }

@@ -9,9 +9,6 @@
     import type { createTable } from "src/builder/stores/table/table";
     import type InitiativeTracker from "src/main";
 
-    const { players } = encounter;
-    const { average } = players;
-
     const plugin = getContext<InitiativeTracker>("plugin");
     const table = getContext<ReturnType<typeof createTable>>("table");
 
@@ -60,15 +57,6 @@
         return stringify(source, 0, ", ", false);
     }
 
-    $: insignificant =
-        "cr" in creature &&
-        creature.cr &&
-        convertFraction(creature.cr) < $average - 3;
-    $: challenge =
-        "cr" in creature &&
-        creature.cr &&
-        convertFraction(creature.cr) > $average + 3;
-
     const baby = (node: HTMLElement) => setIcon(node, "baby");
     const skull = (node: HTMLElement) => setIcon(node, "skull");
 </script>
@@ -84,20 +72,6 @@
                     plugin.openCombatant(CreatureCreator.from(creature))}
             >
                 {creature.name}
-                {#if insignificant}
-                    <div
-                        class="contains-icon"
-                        use:baby
-                        aria-label={"This creature is significantly under the average party level and might not contribute much to the fight."}
-                    />
-                {/if}
-                {#if challenge}
-                    <div
-                        class="contains-icon"
-                        use:skull
-                        aria-label={"This creature is significantly over the average party level and might prove a challenge."}
-                    />
-                {/if}
             </div>
             <div class="setting-item-description">
                 {#if creature.source?.length}
