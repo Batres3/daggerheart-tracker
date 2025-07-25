@@ -9,7 +9,6 @@ import type { SRDMonster } from "src/types/creatures";
 
 interface BuilderContext {
     plugin: InitiativeTracker;
-    playerCount: number;
 }
 declare module "svelte" {
     function setContext<T extends keyof BuilderContext>(

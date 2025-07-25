@@ -21,15 +21,3 @@ export type TableHeaderState = {
     type: SortFunctions;
     func?: string;
 };
-export interface BuilderPartyPlayer {
-    level: number;
-    enabled: boolean;
-    name: string;
-}
-export interface BuilderGenericPlayer {
-    level: number;
-    enabled: boolean;
-    amount: number;
-}
-
-export type BuilderPlayer = BuilderPartyPlayer | BuilderGenericPlayer;

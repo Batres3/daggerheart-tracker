@@ -447,6 +447,7 @@ export default class InitiativeTracker extends Plugin {
                             tracker?.new(this, {
                                 creatures,
                                 state: false,
+                                party: undefined,
                                 name: null,
                                 round: 1,
                                 logFile: null,

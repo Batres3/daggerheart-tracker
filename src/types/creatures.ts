@@ -1,4 +1,3 @@
-import type { Monster } from "@javalent/fantasy-statblocks";
 export class Thresholds {
     major: number;
     severe: number;
@@ -74,7 +73,7 @@ export interface SRDMonster {
     [key: string]: any;
 }
 
-export function srd_from_statblocks(item: Monster): SRDMonster {
+export function srd_from_statblocks(item: any): SRDMonster {
     let thresholds = null;
     if (item.thresholds == "None") {
         thresholds = new Thresholds(0, 0);
@@ -83,14 +82,14 @@ export function srd_from_statblocks(item: Monster): SRDMonster {
         thresholds = new Thresholds(Number(major), Number(severe));
     }
     return {
-        name: item.name,
+        name: item.name as string,
         thresholds: thresholds,
-        dc: item.difficulty as number,
-        hp: item.hp as number,
-        stress: item.stress as number,
+        dc: Number(item.difficulty),
+        hp: Number(item.hp),
+        stress: Number(item.stress),
         atk: Number(item.atk),
         tier: Number(item.tier),
-        type: item.type,
+        type: item.type as string,
         monster: item.monster as string ?? "",
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,

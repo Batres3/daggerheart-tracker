@@ -10,7 +10,6 @@ import {
 import type InitiativeTracker from "../../main";
 
 enum SuggestContext {
-    Players,
     Creatures,
     Party,
     RollHP,
@@ -20,7 +19,6 @@ enum SuggestContext {
 
 interface ParsedEncounter {
     name?: string;
-    players?: string[];
     party?: string;
     creatures?: Array<{ [key: number]: string } | string>;
 }
@@ -39,11 +37,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
                 suggestions = [];
                 break;
             }
-            case SuggestContext.Players:
-                suggestions = [...this.plugin.players.keys()].filter(
-                    (p) => !this._encounter.players?.includes(p)
-                );
-                break;
             case SuggestContext.Creatures:
                 suggestions = this.plugin.bestiaryNames;
                 break;
@@ -58,7 +51,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
                 break;
             case SuggestContext.None:
                 suggestions = [
-                    "players",
                     "creatures",
                     "party",
                     "name"
@@ -79,7 +71,7 @@ export class EncounterSuggester extends EditorSuggest<string> {
         switch (this._context) {
             case SuggestContext.None: {
                 value = `${value}:`;
-                if (/^(players|creatures):/.test(value)) {
+                if (/^(creatures):/.test(value)) {
                     value = `${value}\n  - `;
                 } else {
                     value = `${value} `;
@@ -87,13 +79,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
                 break;
             }
             case SuggestContext.Creatures:
-            case SuggestContext.Players: {
-                const spaces = this.context.editor
-                    .getLine(this.context.start.line)
-                    .search(/\S/);
-                value = `${value}\n${" ".repeat(spaces)}- `;
-                break;
-            }
             case SuggestContext.Party:
             case SuggestContext.RollHP: {
                 const endsWithSpace = /\s$/.test(
@@ -188,11 +173,6 @@ export class EncounterSuggester extends EditorSuggest<string> {
                 let line = split[i];
                 if (/^```$/.test(line)) return null;
                 if (/^```encounter/.test(line)) return null;
-                if (/^players:/.test(line)) {
-                    this._context = SuggestContext.Players;
-                    found = true;
-                    break;
-                }
                 if (/^creatures:/.test(line)) {
                     this._context = SuggestContext.Creatures;
                     found = true;

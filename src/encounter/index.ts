@@ -8,7 +8,6 @@ import type { Party } from "src/settings/settings.types";
 
 type RawCreatureArray = string | Array<string | { [key: number]: string }>;
 type RawCreature = string | { [key: number]: string };
-type RawPlayers = boolean | "none" | string[];
 export interface EncounterParameters {
     name?: string;
     party?: string;

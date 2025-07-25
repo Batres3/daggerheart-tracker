@@ -46,7 +46,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             if (!this.plugin.data.openState) {
                 this.plugin.data.openState = {
                     battle: true,
-                    player: true,
                     party: true,
                     plugin: true,
                     status: true,
@@ -56,11 +55,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
             this._displayBattle(
                 containerEl.createEl("details", {
                     cls: "initiative-tracker-additional-container",
-                    attr: {
-                        ...(this.plugin.data.openState.player
-                            ? { open: true }
-                            : {})
-                    }
                 })
             );
             this._displayParties(
@@ -131,7 +125,7 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Display Encounter Difficulty")
             .setDesc(
-                "Display encounter difficulty based on creature CR and player level. Creatures without CR or level will not be considered in the calculation."
+                "Display encounter difficulty Battle Points according to the SRD"
             )
             .addToggle((t) => {
                 t.setValue(this.plugin.data.displayDifficulty).onChange(
@@ -201,19 +195,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 });
             });
-        new Setting(additionalContainer)
-            .setName("Display Player HP in Player View")
-            .setDesc(
-                "If turned off, player health will display as 'Healthy', 'Hurt', etc."
-            )
-            .addToggle((t) => {
-                t.setValue(this.plugin.data.diplayPlayerHPValues).onChange(
-                    async (v) => {
-                        this.plugin.data.diplayPlayerHPValues = v;
-                        await this.plugin.saveSettings();
-                    }
-                );
-            });
 
         new Setting(additionalContainer)
             .setName("Log Battles")
@@ -273,9 +254,6 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
 
     private _displayBuilder(additionalContainer: HTMLDetailsElement) {
         additionalContainer.empty();
-        additionalContainer.ontoggle = () => {
-            this.plugin.data.openState.player = additionalContainer.open;
-        };
         const summary = additionalContainer.createEl("summary");
         new Setting(summary).setHeading().setName("Encounters");
         summary.createDiv("collapser").createDiv("handle");
@@ -314,7 +292,7 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     )
                 );
                 d.setValue(
-                    this.plugin.data.rpgSystem ?? RpgSystemSetting.Dnd5e
+                    this.plugin.data.rpgSystem ?? RpgSystemSetting.Daggerheart
                 );
                 d.onChange(async (v) => {
                     this.plugin.data.rpgSystem = v;
@@ -342,22 +320,11 @@ export default class InitiativeTrackerSettings extends PluginSettingTab {
                     .setName(name)
                     .setDesc(
                         createFragment((e) => {
-                            const players = [],
-                                creatures = [];
+                            const creatures = [];
                             for (const creature of encounter.creatures) {
-                                if (creature.player) {
-                                    players.push(creature.name);
-                                } else {
-                                    creatures.push(creature.name);
-                                }
+                                creatures.push(creature.name);
                             }
 
-                            if (players.length) {
-                                e.createSpan({
-                                    text: `Players: ${players.join(", ")}`
-                                });
-                                e.createEl("br");
-                            }
                             if (creatures.length) {
                                 e.createSpan({
                                     text: `Creatures: ${creatures.join(", ")}`

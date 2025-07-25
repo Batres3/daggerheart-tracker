@@ -13,7 +13,6 @@ export interface InitiativeTrackerData {
         party: boolean;
         status: boolean;
         plugin: boolean;
-        player: boolean;
         builder: boolean;
     };
     parties: Party[];
@@ -24,7 +23,6 @@ export interface InitiativeTrackerData {
     initiative: string;
     modifier: string;
     sync: boolean;
-    playerMarker: string;
     monsterMarker: string;
     state: InitiativeViewState;
     unconsciousId: string;
@@ -37,7 +35,6 @@ export interface InitiativeTrackerData {
     logging: boolean;
     logFolder: string;
     useLegacy: boolean;
-    diplayPlayerHPValues: boolean;
     builder: BuilderState;
     descending: boolean;
     version: number[];

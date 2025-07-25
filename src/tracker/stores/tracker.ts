@@ -193,6 +193,7 @@ function createTracker() {
     const getEncounterState = (): InitiativeViewState => {
         return {
             creatures: get(creatures).map((c) => c.toJSON()),
+            party: get($party),
             state: get($state),
             name: get($name)!,
             round: get($round),
