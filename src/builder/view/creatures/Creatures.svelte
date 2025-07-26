@@ -110,7 +110,7 @@
         menu.showAtMouseEvent(evt.detail);
     };
     const openFiltersModal = () => {
-        const modal = new FiltersModal($layout, filterStore);
+        const modal = new FiltersModal(plugin, $layout, filterStore);
         modal.open();
         modal.onClose = () => {
             if (modal.canceled) return;

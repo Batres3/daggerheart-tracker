@@ -422,7 +422,7 @@ export default class InitiativeTracker extends Plugin {
             )
         );
         this.registerEvent(
-            app.workspace.on(
+            this.app.workspace.on(
                 "initiative-tracker:save-state",
                 async (state: InitiativeViewState) => {
                     this.data.state = state;

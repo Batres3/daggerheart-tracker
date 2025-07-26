@@ -61,7 +61,7 @@ export default class TrackerView extends ItemView {
     playerViewOpened = false;
     getExistingPlayerView(): PlayerView | undefined {
         const existing =
-            this.plugin.app.workspace.getLeavesOfType(PLAYER_VIEW_VIEW);
+            this.app.workspace.getLeavesOfType(PLAYER_VIEW_VIEW);
 
         if (existing.length) {
             return existing[0].view as PlayerView;
@@ -99,7 +99,7 @@ export class CreatureView extends ItemView {
             "a.internal-link",
             debounce(
                 (ev) =>
-                    app.workspace.trigger(
+                    this.app.workspace.trigger(
                         "link-hover",
                         {}, //hover popover, but don't need
                         ev.target as HTMLElement, //targetEl
@@ -110,7 +110,7 @@ export class CreatureView extends ItemView {
             )
         );
         this.containerEl.on("click", "a.internal-link", (ev) =>
-            app.workspace.openLinkText(
+            this.app.workspace.openLinkText(
                 (ev.target as HTMLAnchorElement).dataset.href,
                 "initiative-tracker"
             )
@@ -180,7 +180,7 @@ export class CreatureView extends ItemView {
         if (file) {
             const fileContent = await this.app.vault.cachedRead(file);
             if (subpath && fileContent) {
-                const cache = app.metadataCache.getFileCache(file);
+                const cache = this.app.metadataCache.getFileCache(file);
                 const subpathResult = resolveSubpath(cache, subpath);
                 if (subpathResult) {
                     content = fileContent.slice(

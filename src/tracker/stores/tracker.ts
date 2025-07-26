@@ -5,8 +5,9 @@ import {
     get,
     type Updater,
     type Writable,
-    writable
+    writable,
 } from "svelte/store";
+import { getContext } from "svelte";
 import { equivalent } from "../../encounter";
 import { Events, Platform, TFile } from "obsidian";
 import type { UpdateLogMessage } from "src/logger/logger.types";
@@ -46,6 +47,7 @@ function createTracker() {
     const creatures = writable<Creature[]>([]);
     const updating = writable<Map<Creature, HPUpdate>>(new Map());
     const updateTarget = writable<"ac" | "hp">();
+    const app = getContext<InitiativeTracker>("plugin").app;
     const { subscribe, set, update } = creatures;
 
     const $logFile = writable<TFile | null>();

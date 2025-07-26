@@ -1,4 +1,5 @@
 import { Modal, Setting } from "obsidian";
+import type InitiativeTracker from "src/main";
 
 import copy from "fast-copy";
 import Filters from "./Container.svelte";
@@ -9,8 +10,8 @@ export class FiltersModal extends Modal {
     canceled: boolean = false;
     reset = false;
     layout: FilterLayout;
-    constructor(layout: FilterLayout, public filterStore: BuiltFilterStore) {
-        super(app);
+    constructor(plugin: InitiativeTracker, layout: FilterLayout, public filterStore: BuiltFilterStore) {
+        super(plugin.app);
         this.layout = copy(layout);
     }
     onOpen() {
