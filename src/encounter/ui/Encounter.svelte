@@ -73,7 +73,7 @@
         tracker.new(plugin, {
             creatures: transformedCreatures,
             name,
-            party: party.name,
+            party: party ? party.name : undefined,
             round: 1,
             state: false,
             logFile: null,
