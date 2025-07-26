@@ -118,7 +118,7 @@
         };
     };
     const openHeadersModal = () => {
-        const modal = new HeadersModal($table.map((t) => t.toState()));
+        const modal = new HeadersModal(plugin, $table.map((t) => t.toState()));
         modal.open();
         modal.onClose = () => {
             if (modal.canceled) return;

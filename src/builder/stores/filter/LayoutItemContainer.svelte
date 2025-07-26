@@ -8,6 +8,7 @@
     import { createEventDispatcher, getContext } from "svelte";
     import { EditFilterModal } from "./filters-modal";
 
+    const plugin = getContext<InitiativeTracker>("plugin");
     const dispatch = createEventDispatcher<{
         edit: null;
         deleted: string;
@@ -33,7 +34,7 @@
         new ExtraButtonComponent(node).setIcon("pencil");
     };
     const handleEdit = () => {
-        const modal = new EditFilterModal(filter);
+        const modal = new EditFilterModal(plugin, filter);
 
         modal.onClose = () => {
             if (modal.canceled) return;

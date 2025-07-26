@@ -35,8 +35,8 @@ export class FiltersModal extends Modal {
 export class EditFilterModal extends Modal {
     canceled = false;
     filter: Filter;
-    constructor(public original: Filter) {
-        super(app);
+    constructor(plugin: InitiativeTracker, public original: Filter) {
+        super(plugin.app);
         this.filter = copy(original);
     }
     onOpen(): void {
