@@ -65,6 +65,7 @@ export interface SRDMonster {
     atk: number
     tier: number;
     type: string;
+    environment: boolean;
     monster?: string;
     friendly?: boolean;
     hidden?: boolean;
@@ -78,7 +79,7 @@ export function srd_from_statblocks(item: any): SRDMonster {
     let thresholds = null;
     if (item.thresholds == "None") {
         thresholds = new Thresholds(0, 0);
-    } else {
+    } else if (item.thresholds) {
         const [major, severe] = item.thresholds.split("/");
         thresholds = new Thresholds(Number(major), Number(severe));
     }
@@ -91,6 +92,7 @@ export function srd_from_statblocks(item: any): SRDMonster {
         atk: Number(item.atk),
         tier: Number(item.tier),
         type: item.type as string,
+        environment: item.layout.includes("Environment"),
         monster: item.monster as string ?? "",
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,
@@ -110,6 +112,7 @@ export interface HomebrewCreature {
     tier?: number;
     type?: string;
     source?: string | string[];
+    environment?: boolean;
     note?: string;
     path?: string;
     marker?: string;

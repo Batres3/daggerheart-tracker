@@ -75,7 +75,7 @@ export default class InitiativeTracker extends Plugin {
     }
     get bestiary() {
         return this.statblock_creatures.filter(
-            (p) => p.bestiary !== false
+            (p) => p.bestiary !== false && p.environment == false
         );
     }
 
