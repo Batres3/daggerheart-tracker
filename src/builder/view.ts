@@ -25,14 +25,14 @@ export default class BuilderView extends ItemView {
         super(leaf);
     }
     getState() {
-        return [...get(encounter).entries()];
+        return { entries: [...get(encounter).entries()] };
     }
     async setState(
         state: [SRDMonster, number][],
         result: ViewStateResult
     ): Promise<void> {
         if (state && Array.isArray(state)) encounter.setMultiple(state);
-        super.setState(state, result);
+        super.setState({ entries: state }, result);
     }
     ui: Builder;
     async onOpen() {

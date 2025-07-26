@@ -47,8 +47,8 @@ function createTracker() {
     const creatures = writable<Creature[]>([]);
     const updating = writable<Map<Creature, HPUpdate>>(new Map());
     const updateTarget = writable<"ac" | "hp">();
-    const app = getContext<InitiativeTracker>("plugin").app;
     const { subscribe, set, update } = creatures;
+    const $plugin = writable<InitiativeTracker | null>();
 
     const $logFile = writable<TFile | null>();
 
@@ -206,7 +206,7 @@ function createTracker() {
     };
 
     const trySave = () => {
-        app.workspace.trigger(
+        get($plugin).app.workspace.trigger(
             "initiative-tracker:save-state",
             getEncounterState()
         );
@@ -502,6 +502,7 @@ function createTracker() {
             }),
         new: (plugin: InitiativeTracker, state?: InitiativeViewState) =>
             updateAndSave((creatures) => {
+                $plugin.set(plugin);
                 $round.set(state?.round ?? 1);
                 $state.set(state?.state ?? false);
                 $name.set(state?.name ?? null);
