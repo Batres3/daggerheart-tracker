@@ -69,6 +69,7 @@ export interface SRDMonster {
     friendly?: boolean;
     hidden?: boolean;
     bestiary?: boolean;
+    layout?: string;
 
     [key: string]: any;
 }
@@ -94,6 +95,7 @@ export function srd_from_statblocks(item: any): SRDMonster {
         friendly: item.friendly as boolean ?? false,
         hidden: item.hidden as boolean ?? false,
         bestiary: item.bestiary as boolean ?? true,
+        layout: item.layout as string,
     }
 }
 
@@ -117,6 +119,7 @@ export interface HomebrewCreature {
     spotlight?: boolean;
     static?: boolean;
     statblock_link?: string;
+    layout?: string;
 }
 
 export type Condition = {
