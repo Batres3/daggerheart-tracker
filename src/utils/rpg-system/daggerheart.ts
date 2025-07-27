@@ -39,7 +39,7 @@ export class DaggerheartSystem extends RpgSystem {
         party: Party
     ): string[] {
         if (!party) {
-            party = { name: "", players: 0, level: 0 };
+            party = { name: "", players: 1, level: 1 };
         }
         let tier = level_to_tier(party.level);
         if (creature.tier > tier) return ["Overleveled"];
@@ -52,7 +52,7 @@ export class DaggerheartSystem extends RpgSystem {
         party: Party
     ): DifficultyLevel {
         if (!party) {
-            party = { name: "", players: 0, level: 0 };
+            party = { name: "", players: 1, level: 1 };
         }
         let budget = 3 * party.players + 2;
         let player_tier = level_to_tier(party.level);

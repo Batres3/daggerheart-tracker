@@ -6,10 +6,10 @@
     import Nullable from "../Nullable.svelte";
     import { getContext } from "svelte";
     import { Creature as CreatureCreator } from "src/utils/creature";
+    import { party } from "src/builder/stores/party.ts"
 
     const plugin = getContext("plugin");
     const rpgSystem = getRpgSystem(plugin);
-    const party = plugin.defaultParty;
     const remove = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon("minus-circle");
     };
@@ -31,7 +31,7 @@
     const friendIcon = (node: HTMLElement) => {
         setIcon(node, FRIENDLY);
     };
-    $: difficulty = rpgSystem.getAdditionalCreatureDifficultyStats(creature, party);
+    $: difficulty = rpgSystem.getAdditionalCreatureDifficultyStats(creature, $party);
     $: insignificant =
         difficulty.includes("Underleveled");
     $: challenge =
@@ -107,7 +107,7 @@
         <span>
             <Nullable
                 str={rpgSystem.formatDifficultyValue(
-                    rpgSystem.getCreatureDifficulty(creature, party),
+                    rpgSystem.getCreatureDifficulty(creature, $party),
                     true
                 )}
             />

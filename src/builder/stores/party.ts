@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 
 const empty_party = {
     name: "",
-    players: 0,
+    players: 1,
     level: 1
 }
 
