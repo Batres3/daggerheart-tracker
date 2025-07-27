@@ -18,6 +18,10 @@ With this plugin, you can add creatures and NPCs to the tracker, and track their
 It is still missing support for environments, though it should be coming any day now.
 
 ## Installation
+### Release
+Navigate to the [Github Releases](https://github.com/Batres3/daggerheart-tracker/releases), find the latest release, and download the three files `main.js`, `manifest.json` and `styles.css`.
+Go to your vault, head to the `.obsidian/plugins` folder and create a new folder within, called (for example) `daggerheart-tracker`, then put the three files you downloaded into it.
+When you now open the community plugins section in obsidian, the plugin should show up.
 ### Manual
 Go to the `.obsidian` folder within your vault, within that folder find the `plugins` folder, if it doesn't exist create it.
 Clone this repository into your `plugins` folder, either with the following command
