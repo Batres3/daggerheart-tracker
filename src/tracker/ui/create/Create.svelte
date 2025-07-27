@@ -17,7 +17,7 @@
     import { equivalent } from "src/encounter";
     import { confirmWithModal } from "./modal";
 
-    let creature: Creature = new Creature({});
+    let creature: Creature = Creature.new({});
     export let amount = 1;
     export let plugin: InitiativeTracker;
     export let adding: Writable<Array<[Creature, number]>>;
@@ -54,7 +54,7 @@
                 }
                 $adding = $adding;
                 $editing = null;
-                creature = new Creature({});
+                creature = Creature.new({});
             });
     };
     const editButton = (node: HTMLElement) => {
@@ -82,7 +82,7 @@
                 }
                 $adding = $adding;
                 $editing = null;
-                creature = new Creature({});
+                creature = Creature.new({});
             });
     };
     const cancelButton = (node: HTMLElement) => {
@@ -90,7 +90,7 @@
             .setTooltip("Cancel")
             .setIcon("reset")
             .onClick(() => {
-                creature = new Creature({});
+                creature = new Creature.new({});
             });
     };
     let nameInput: TextComponent, displayNameInput: HTMLInputElement;
@@ -164,6 +164,27 @@
                 tabindex="0"
             />
         </div>
+        <div class="thresholds-row">
+            <label for="threshold-major">Thresholds:</label>
+            <input
+                bind:value={creature.thresholds.major}
+                id="threshold-major"
+                type="number"
+                aria-label="Major Threshold"
+                name="threshold-major"
+                tabindex="0"
+                class="threshold-input"
+            />
+            <input
+                bind:value={creature.thresholds.severe}
+                id="threshold-severe"
+                aria-label="Severe Threshold"
+                type="number"
+                name="threshold-severe"
+                tabindex="0"
+                class="threshold-input"
+            />
+        </div>
         <div>
             <label for="add-hp">HP</label>
             <input
@@ -181,6 +202,26 @@
                 id="add-stress"
                 type="number"
                 name="stress"
+                tabindex="0"
+            />
+        </div>
+        <div>
+            <label for="add-tier">Tier</label>
+            <input
+                bind:value={creature.tier}
+                id="add-tier"
+                type="number"
+                name="tier"
+                tabindex="0"
+            />
+        </div>
+        <div>
+            <label for="add-type">Type</label>
+            <input
+                bind:value={creature.type}
+                id="add-type"
+                type="string"
+                name="type"
                 tabindex="0"
             />
         </div>
@@ -233,5 +274,20 @@
     }
     .cancel-button {
         color: var(--text-faint);
+    }
+    .thresholds-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .thresholds-row label {
+        white-space: nowrap;
+    }
+
+    .threshold-input {
+        width: 3.5rem;
+        padding: 0.2rem 0.4rem;
+        font-size: 0.9rem;
     }
 </style>

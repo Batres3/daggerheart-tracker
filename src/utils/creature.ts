@@ -56,11 +56,11 @@ export class Creature {
         this.dc = new Resource(creature.dc);
         this.hp = new Resource(creature.hp);
         this.stress = new Resource(creature.stress);
-        this.thresholds = creature.thresholds;
+        this.thresholds = creature.thresholds ?? new Thresholds(0, 0);
         this.atk = creature.atk;
         this.note = creature.note;
         this.tier = creature.tier;
-        this.type = creature.type;
+        this.type = creature.type ?? "";
         this.marker = creature.marker;
         this.source = creature.source;
         this.friendly = creature.friendly ?? this.friendly;
@@ -105,9 +105,9 @@ export class Creature {
             {
                 ...creature,
                 id: getId(),
-                hp: creature.hp.max,
-                stress: creature.stress.max,
-                dc: creature.dc.max,
+                hp: creature.hp ? creature.hp.max : 0,
+                stress: creature.stress ? creature.stress.max : 0,
+                dc: creature.dc ? creature.dc.max : 0,
             },
         );
     }
