@@ -1,6 +1,6 @@
 {
     "name": "@batres/daggerheart-tracker",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Daggerheart Combat Tracker for Obsidian.md",
     "types": "./dist/index.d.ts",
     "scripts": {
