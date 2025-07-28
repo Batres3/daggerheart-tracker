@@ -8,11 +8,11 @@
     import { Creature as CreatureCreator } from "src/utils/creature";
     import type { createTable } from "src/builder/stores/table/table";
     import type InitiativeTracker from "src/main";
-
     const plugin = getContext<InitiativeTracker>("plugin");
     const table = getContext<ReturnType<typeof createTable>>("table");
 
     export let creature: SRDMonster;
+    const statblock = CreatureCreator.fromJSON(CreatureCreator.from(creature).toJSON());
     const add = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon("plus-with-circle");
     };
@@ -69,7 +69,7 @@
             <div
                 class="setting-item-name creature-name"
                 on:click={(evt) =>
-                    plugin.openCombatant(CreatureCreator.from(creature))}
+                    plugin.openCombatant(statblock)}
             >
                 {creature.name}
             </div>
