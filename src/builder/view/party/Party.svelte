@@ -63,7 +63,7 @@
         <div slot="content">
             <div class="party">
                 {#if parties.length}
-                    <div use:partyDropdown />
+                    <div use:partyDropdown></div>
                 {/if}
             </div>
 
@@ -79,7 +79,7 @@
                             }
                         />
                         <span>Player(s)</span>
-                        <div use:crossIcon />
+                        <div use:crossIcon></div>
 
                         <span>Level</span>
                         <input

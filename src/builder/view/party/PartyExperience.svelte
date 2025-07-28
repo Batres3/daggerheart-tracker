@@ -5,8 +5,8 @@
 
 <div class="player-component-container">
     <div class="players-xp">
-        <Party />
-        <Experience />
+        <Party></Party>
+        <Experience></Experience>
     </div>
 </div>
 

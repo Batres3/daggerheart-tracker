@@ -30,15 +30,14 @@
 
 <div class="difficulty-bar-container" aria-label={summary}>
     <span>{$dif.labels?.[0] ?? ""}</span>
-    <span
-        ><meter
+    <span><meter
             class="difficulty-bar"
             min="0"
             low="0.33"
             high="0.66"
             optimum="0"
             value={$difficultyBar}
-        /></span
+        ></meter></span
     >
     <span>{$dif.labels?.last() ?? ""}</span>
 </div>

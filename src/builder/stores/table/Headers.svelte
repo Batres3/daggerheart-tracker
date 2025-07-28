@@ -156,9 +156,9 @@
     };
 </script>
 
-<div use:reset />
+<div use:reset></div>
 
-<div use:add />
+<div use:add></div>
 
 <p>
     <small>
@@ -166,7 +166,7 @@
     </small>
 </p>
 <div class="header-container">
-    <div use:headerSettingName class="header" />
+    <div use:headerSettingName class="header"></div>
     <section
         use:dndzone={{ items, flipDurationMs }}
         on:consider={handleDndConsider}
@@ -174,14 +174,14 @@
     >
         {#each items as item (item.id)}
             <div animate:flip={{ duration: flipDurationMs }}>
-                <div use:headerSetting={item} class="header" />
+                <div use:headerSetting={item} class="header"></div>
             </div>
         {/each}
     </section>
 </div>
 
 <div class="cancel-button">
-    <div use:cancel on:click={() => dispatch("cancel")} />
+    <button type="button" use:cancel on:click={() => dispatch("cancel")}></button>
 </div>
 
 <style scoped>

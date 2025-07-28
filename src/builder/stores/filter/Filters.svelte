@@ -64,7 +64,7 @@
                     block={item}
                     inline={true}
                     on:deleted={(e) => handleDeleted(e.detail)}
-                />
+                ></svelte:self>
             </div>
         {/each}
     </section>
@@ -72,7 +72,7 @@
     <LayoutItemContainer
         id={block.id}
         on:deleted={(e) => dispatch("deleted", e.detail)}
-    />
+    ></LayoutItemContainer>
 {/if}
 
 <style>

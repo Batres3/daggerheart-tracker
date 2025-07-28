@@ -11,7 +11,7 @@
         bind:selected={$filter}
         outerDivClass="multiselect-dropdown"
         placeholder={filter.text}
-    />
+    ></Multiselect>
 </div>
 
 <style scoped>

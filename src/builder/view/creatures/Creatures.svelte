@@ -135,7 +135,7 @@
 </script>
 
 <div class="filters">
-    <Filters on:settings={(evt) => settingsMenu(evt)} />
+    <Filters on:settings={(evt) => settingsMenu(evt)}></Filters>
 </div>
 
 {#if $allHeaders.length}
@@ -151,9 +151,9 @@
                         <span class="table-header-content">{header.text}</span>
                         {#if header.active}
                             {#if $sortDir}
-                                <div class="has-icon" use:sortUp />
+                                <div class="has-icon" use:sortUp></div>
                             {:else}
-                                <div class="has-icon" use:sortDown />
+                                <div class="has-icon" use:sortDown></div>
                             {/if}
                         {/if}
                     </div>
@@ -162,7 +162,7 @@
         </thead>
         <tbody>
             {#each $filtered.slice((page - 1) * slice, page * slice) as creature}
-                <Creature {creature} />
+                <Creature {creature}></Creature>
             {/each}
         </tbody>
     </table>
@@ -176,7 +176,7 @@
     on:previous={() => (page = page - 1)}
     on:next={() => (page = Math.min(page + 1, pages))}
     on:page={(evt) => (page = evt.detail)}
-/>
+></Pagination>
 
 <style scoped>
     .filters {

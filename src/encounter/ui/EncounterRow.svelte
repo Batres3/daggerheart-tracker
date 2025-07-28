@@ -163,7 +163,7 @@
                                 <strong
                                     class="creature-amount"
                                     use:rollerEl={creature}
-                                />
+                                ></strong>
                             </CreatureComponent>
                         </li>
                     {/each}
@@ -193,8 +193,8 @@
     {/if}
     <td>
         <div class="icons">
-            <div use:open />
-            <div use:addButton on:click={add} aria-label="Add to Encounter" />
+            <div use:open></div>
+            <button type="button" use:addButton on:click={add} aria-label="Add to Encounter"></button>
         </div>
     </td>
 </tr>

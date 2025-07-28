@@ -28,19 +28,19 @@
 {#if "nested" in layout}
     <div class="nested-filter-container">
         {#each layout.nested as nested}
-            <svelte:self layout={nested} />
+            <svelte:self layout={nested}></svelte:self>
         {/each}
     </div>
 {:else}
     <div class="filter-container">
         {#if filter.type == FilterType.Range}
-            <Range {filter} />
+            <Range {filter}></Range>
         {/if}
         {#if filter.type == FilterType.Options}
-            <Options {filter} />
+            <Options {filter}></Options>
         {/if}
         {#if filter.type == FilterType.Search}
-            <Search {filter} />
+            <Search {filter}></Search>
         {/if}
     </div>
 {/if}

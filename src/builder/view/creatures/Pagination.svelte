@@ -87,11 +87,11 @@
 
 <div class="pagination">
     <div class="slicer">
-        <div use:slicer />
+        <div use:slicer></div>
         <span>per page</span>
     </div>
     <div class="paginated-container">
-        <div class="previous" use:previous />
+        <div class="previous" use:previous></div>
         <div class="paginated">
             {#each displayed as num}
                 {#if num == null}
@@ -107,7 +107,7 @@
                 {/if}
             {/each}
         </div>
-        <div class="next" use:next />
+        <div class="next" use:next></div>
     </div>
 </div>
 

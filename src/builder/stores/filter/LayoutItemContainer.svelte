@@ -57,19 +57,19 @@
 <div class="filter-container">
     <div class="filter">
         <div class="name-container">
-            <div class="icon" use:getIcon />
+            <div class="icon" use:getIcon></div>
             <div class="text"><span>{filter.text}</span></div>
         </div>
         <div>
             <small
                 ><em class="description-container">
                     {#if filter.derive}
-                        <div class="icon" use:derivedIcon />
+                        <div class="icon" use:derivedIcon></div>
                     {/if}
                     {#if filter.fields.length}
                         {filter.fields.join(", ")}
                     {:else}
-                        <div use:warn class="warning-icon icon" />
+                        <div use:warn class="warning-icon icon"></div>
                         <span class="warning-icon">No fields</span>
                     {/if}
                 </em>
@@ -77,8 +77,8 @@
         </div>
     </div>
     <div class="context">
-        <div use:edit class="icon" on:click={() => handleEdit()} />
-        <div use:trash class="icon" on:click={() => dispatch("deleted", id)} />
+        <button type="button" use:edit class="icon" on:click={() => handleEdit()}></button>
+        <button type="button" use:trash class="icon" on:click={() => dispatch("deleted", id)}></button>
     </div>
 </div>
 

@@ -12,7 +12,7 @@
     };
 </script>
 
-<div class="search" use:search />
+<div class="search" use:search></div>
 
 <style scoped>
     .search,

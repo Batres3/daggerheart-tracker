@@ -131,28 +131,28 @@
     $: dispatch("update", filter);
 </script>
 
-<div use:reset />
-<div use:type />
-<div use:text />
-<div use:fields />
+<div use:reset></div>
+<div use:type></div>
+<div use:text></div>
+<div use:fields></div>
 {#key filter}
     <DraggableField
         fields={filter.fields}
         on:update={(evt) => updateFields(evt.detail)}
-    />
-    <div use:derive />
+    ></DraggableField>
+    <div use:derive></div>
     {#if !filter.derive}
         {#if filter.type == FilterType.Range}
-            <div use:range />
+            <div use:range></div>
         {:else if filter.type == FilterType.Options}
-            <div use:options />
+            <div use:options></div>
             <DraggableField
                 fields={filter.options}
                 on:update={(evt) => updateOptions(evt.detail)}
-            />
+            ></DraggableField>
         {/if}
     {/if}
 {/key}
 <div class="cancel-button">
-    <div use:cancel on:click={() => dispatch("cancel")} />
+    <button type="button" use:cancel on:click={() => dispatch("cancel")}></button>
 </div>

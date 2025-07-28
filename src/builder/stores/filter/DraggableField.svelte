@@ -46,7 +46,7 @@
 >
     {#each items.filter(({ id }) => id != SHADOW_PLACEHOLDER_ITEM_ID) as item (item.id)}
         <div animate:flip={{ duration: flipDurationMs }}>
-            <div use:fieldSetting={item} class="draggable-field" />
+            <div use:fieldSetting={item} class="draggable-field"></div>
         </div>
     {/each}
 </section>

@@ -51,7 +51,7 @@
 
 <div class="encounter-creature-container">
     <div class="encounter-creature-controls">
-        <div use:remove on:click={() => encounter.remove(creature)} />
+        <button type="button" use:remove on:click={() => encounter.remove(creature)}></button>
         <input
             type="number"
             min="1"
@@ -59,7 +59,7 @@
             on:change={(evt) =>
                 encounter.set(creature, Number(evt.currentTarget.value))}
         />
-        <div use:add on:click={() => encounter.add(creature)} />
+        <button type="button" use:add on:click={() => encounter.add(creature)}></button>
     </div>
     <div class="encounter-creature">
         {#if creature.hidden}
@@ -67,14 +67,14 @@
                 class="contains-icon"
                 use:hideIcon
                 aria-label={`This creature is hidden.`}
-            />
+            ></div>
         {/if}
         {#if creature.friendly}
             <div
                 class="contains-icon"
                 use:friendIcon
                 aria-label={`This creature is an ally.`}
-            />
+            ></div>
         {/if}
         <strong class="encounter-creature-name" on:click={open}>
             {creature.name}
@@ -86,7 +86,7 @@
                 aria-label={`${
                     count > 1 ? "These creatures are" : "This creature is"
                 } of a lower tier than the party and might not contribute much to the fight.`}
-            />
+            ></div>
         {/if}
         {#if challenge}
             <div
@@ -95,7 +95,7 @@
                 aria-label={`${
                     count > 1 ? "These creatures are" : "This creature is"
                 } of a higher tier than the party and might prove a challenge.`}
-            />
+            ></div>
         {/if}
     </div>
     <!-- {#each rpgSystem.getAdditionalCreatureDifficultyStats(creature, party) as stat} -->
@@ -110,19 +110,19 @@
                     rpgSystem.getCreatureDifficulty(creature, $party),
                     true
                 )}
-            />
+            ></Nullable>
         </span>
     </div>
     <div class="encounter-creature-controls">
-        <div use:hide on:click={() => (creature.hidden = !creature.hidden)} />
+        <button type="button" use:hide on:click={() => (creature.hidden = !creature.hidden)}></button>
         <div
             use:friend
             on:click={() => {
                 creature.friendly = !creature.friendly;
                 encounter.update(creature);
             }}
-        />
-        <div use:del on:click={() => encounter.delete(creature)} />
+        ></div>
+        <button type="button" use:del on:click={() => encounter.delete(creature)}></button>
     </div>
 </div>
 

@@ -56,7 +56,7 @@
     <div class="saving-encounter">
         <span>Save encounter as:</span>
         <!-- svelte-ignore a11y-autofocus -->
-        <input type="text" bind:value={encounterName} on:input={checkSave} />
+        <input type="text" bind:value={encounterName} on:input={checkSave}/>
     </div>
 
     <div class="save-buttons">
@@ -67,8 +67,8 @@
                 </small>
             </span>
         {/if}
-        <div class="save" use:save />
-        <div class="cancel" use:cancel />
+        <div class="save" use:save></div>
+        <div class="cancel" use:cancel></div>
     </div>
 </div>
 

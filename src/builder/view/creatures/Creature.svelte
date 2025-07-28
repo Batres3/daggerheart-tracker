@@ -64,7 +64,7 @@
 <tr class="creature">
     <td>
         <div class="creature-name-container">
-            <div use:add on:click={() => encounter.add(creature)} />
+            <button type="button" use:add on:click={() => encounter.add(creature)}></button>
             <!-- svelte-ignore a11y-mouse-events-have-key-events -->
             <div
                 class="setting-item-name creature-name"
@@ -86,7 +86,7 @@
         </div>
     </td>
     {#each $table as header}
-        <td><Nullable str={creature[header.field] ?? DEFAULT_UNDEFINED} /></td>
+        <td><Nullable str={creature[header.field] ?? DEFAULT_UNDEFINED}></Nullable></td>
     {/each}
 </tr>
 

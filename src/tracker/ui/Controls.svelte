@@ -201,11 +201,11 @@
 <div class="buttons">
     <div class="state">
         {#if $state}
-            <div use:stopButton />
-            <div use:prevButton />
-            <div use:nextButton />
+            <div use:stopButton></div>
+            <div use:prevButton></div>
+            <div use:nextButton></div>
         {:else}
-            <div use:playButton />
+            <div use:playButton></div>
         {/if}
     </div>
     <div class="clean">
@@ -214,7 +214,7 @@
                 use:logFileButton
                 aria-label="Open Log File"
                 on:click={openLogFile}
-            />
+            ></div>
         {/if}
         {#if desktop}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -222,10 +222,10 @@
                 use:playerView
                 aria-label="Open Player View"
                 on:click={(evt) => dispatch("player-view")}
-            />
+            ></div>
         {/if}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div use:menuIcon on:click={(evt) => open(evt)} />
+        <button type="button" use:menuIcon on:click={(evt) => open(evt)}></button>
     </div>
 </div>
 

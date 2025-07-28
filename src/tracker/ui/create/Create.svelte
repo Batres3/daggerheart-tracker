@@ -141,7 +141,7 @@
     <div class="create-new">
         <div>
             <label for="add-name">Creature</label>
-            <div use:name id="add-name" />
+            <div use:name id="add-name"></div>
         </div>
         <div>
             <label for="add-display">Display Name</label>
@@ -229,11 +229,11 @@
         {#key creature}
             <div>
                 <label for="add-mod">Hidden</label>
-                <div use:hideToggle />
+                <div use:hideToggle></div>
             </div>
             <div>
                 <label for="add-mod">Friendly</label>
-                <div use:friendToggle />
+                <div use:friendToggle></div>
             </div>
         {/key}
 
@@ -250,11 +250,11 @@
     </div>
     {#if !isEditing && !Platform.isMobile}
         <div class="context-buttons">
-            <div use:cancelButton class="add-button cancel-button" />
+            <div use:cancelButton class="add-button cancel-button"></div>
             {#if $editing}
-                <div class="add-button" use:editButton />
+                <div class="add-button" use:editButton></div>
             {:else}
-                <div class="add-button" use:saveButton />
+                <div class="add-button" use:saveButton></div>
             {/if}
         </div>
     {/if}

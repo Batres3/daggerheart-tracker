@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getContext } from "svelte/internal";
+    import { getContext } from "svelte";
     import { tracker } from "../stores/tracker";
     import Difficulty from "./Difficulty.svelte";
     import { getRpgSystem } from "src/utils";
@@ -24,7 +24,7 @@
         {/if}
     </div>
     {#if $dif}
-        <Difficulty />
+        <Difficulty></Difficulty>
     {/if}
     {#if $party}
         <h4 class="initiave-tracker-party">{$party}</h4>

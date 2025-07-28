@@ -145,8 +145,8 @@
     <div class="encounter-name">
         <h3 data-heading={name} class="initiative-tracker-name">{name}</h3>
         <div class="icons">
-            <div use:openButton on:click={open} aria-label="Start Encounter" />
-            <div use:addButton on:click={add} aria-label="Add to Encounter" />
+            <button type="button" use:openButton on:click={open} aria-label="Start Encounter"></button>
+            <button type="button" use:addButton on:click={add} aria-label="Add to Encounter"></button>
         </div>
     </div>
     <div class="creatures-container">
@@ -168,7 +168,7 @@
                             class="has-icon"
                             aria-label="Rolling for HP"
                             use:rollEl
-                        />
+                        ></span>
                     {/if}
                 </h4>
                 {#if creatures.size}
@@ -189,7 +189,7 @@
                                     <strong
                                         class="creature-amount"
                                         use:rollerEl={creature}
-                                    />
+                                    ></strong>
                                 </CreatureComponent>
                             </li>
                         {/each}

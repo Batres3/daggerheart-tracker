@@ -111,7 +111,7 @@
 </script>
 
 <div class="controls">
-    <div class="add-button icon" use:hamburgerIcon />
+    <div class="add-button icon" use:hamburgerIcon></div>
 </div>
 
 <style>

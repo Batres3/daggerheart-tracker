@@ -25,10 +25,10 @@
 <slot />
 <div class="creature-container">
     {#if creature.friendly}
-        <span class="has-icon" use:friendly />
+        <span class="has-icon" use:friendly></span>
     {/if}
     {#if creature.hidden}
-        <span class="has-icon" use:hidden />
+        <span class="has-icon" use:hidden></span>
     {/if}
     <span class="creature-name" on:click={() => plugin.openCombatant(creature)}>
         {#if creature.display && creature.display != creature.name}

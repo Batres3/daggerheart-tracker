@@ -31,9 +31,9 @@
 </script>
 
 <div class="initiative-tracker encounter-builder markdown-rendered">
-    <PartyExperience />
-    <Encounter />
-    <Creatures />
+    <PartyExperience></PartyExperience>
+    <Encounter></Encounter>
+    <Creatures></Creatures>
 </div>
 
 <style>

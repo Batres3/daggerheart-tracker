@@ -132,7 +132,7 @@
                             use:hpIcon
                             aria-label="Apply damage, (-)healing"
                             style="margin: 0 0.2rem 0 0.7rem"
-                        />
+                        ></tag>
                         <input
                             type="text"
                             bind:value={damage}
@@ -170,15 +170,15 @@
                                 use:tagIcon
                                 aria-label="Apply status effect to creatures that fail their saving throw"
                                 style="margin: 0 0.2rem 0 0.7rem"
-                            />
-                            <div use:conditionDiv />
+                            ></div>
+                            <div use:conditionDiv></div>
                         </div>
                         <div
                             use:addStatusIcon
                             aria-label="Add Status"
                             on:click={addStatus}
                             style="margin: 0rem 0.2rem 0rem 0rem"
-                        />
+                        ></div>
                     </div>
                     {#if $statuses.length}
                         <div class="status-list">
@@ -189,7 +189,7 @@
                                 on:click={function (evt) {
                                     $statuses = [];
                                 }}
-                            />
+                            ></div>
                             <div class="status-list-entries">
                                 {#each $statuses as status}
                                     <Status
@@ -198,7 +198,7 @@
                                             $statuses.remove(status);
                                             $statuses = $statuses;
                                         }}
-                                    />
+                                    ></Status>
                                 {/each}
                             </div>
                         </div>
@@ -215,7 +215,7 @@
                         use:dcIcon
                         aria-label="Set, (+/-)modify or (r)reset the Difficulty of creatures"
                         style="margin: 0 0.2rem 0 0.7rem"
-                    />
+                    ></tag>
                     <input
                         type="text"
                         bind:value={dc}
@@ -246,7 +246,7 @@
                         use:stressIcon
                         aria-label="Modify (+/-) the Stress of creatures"
                         style="margin: 0 0.2rem 0 0.7rem"
-                    />
+                    ></tag>
                     <input
                         type="text"
                         bind:value={stress}
@@ -271,15 +271,15 @@
     </div>
     <div style="margin: 0.5rem">
         <table class="updating-creature-table">
-            <thead class="updating-creature-table-header">
+            <thead class="updating-creature-table-header"><tr>
                 <th style="width:100%" class="left">Name</th>
                 {#if $updateTarget == "hp"}
                     <th style="padding:0 0.2rem" class="center">Saved</th>
                     <th style="padding:0 0.2rem" class="center">Resist</th>
                     <th style="padding:0 0.2rem" class="center">Modifier</th>
-                    <th />
+                    <th></th>
                 {/if}
-            </thead>
+            <tr></thead>
             <tbody>
                 {#each [...$updating.entries()] as [creature, update], i}
                     <tr class="updating-creature-table-row">
@@ -339,7 +339,7 @@
                                 }
                             }}
                             style="cursor:pointer"
-                        />
+                        ></td>
                     </tr>
                 {/each}
             </tbody>
@@ -351,16 +351,16 @@
             on:click={() => performUpdate(true)}
             style="cursor:pointer"
             aria-label="Apply"
-        />
+        ></span>
         <span
             use:cancelIcon
             on:click={() => performUpdate(false)}
             style="cursor:pointer"
             aria-label="Cancel"
-        />
+        ></span>
     </div>
 {:else}
-    <div on:load={() => performUpdate(false)} />
+    <div on:load={() => performUpdate(false)}></div>
 {/if}
 
 <style scoped>

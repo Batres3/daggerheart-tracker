@@ -246,19 +246,19 @@
 <div class="encounter-header">
     <div class="encounter-name">
         {#if $updatingName}
-            <input type="text" bind:value={$tempName} placeholder={$name} />
-            <div use:saveIcon on:click={setName} />
-            <div use:cancelIcon on:click={cancelName} />
+            <input type="text" bind:value={$tempName} placeholder={$name}/>
+            <button type="button" use:saveIcon on:click={setName}></button>
+            <button type="button" use:cancelIcon on:click={cancelName}></button>
         {:else}
             <h5 class="built-encounter">{$name}</h5>
-            <div use:editIcon on:click={() => ($updatingName = true)} />
+            <button type="button" use:editIcon on:click={() => ($updatingName = true)}></button>
         {/if}
     </div>
     <div class="encounter-controls">
-        <div use:start />
-        <div use:saveIcon on:click={save} />
-        <div use:loadIcon on:click={load} />
-        <div use:exp on:click={copy} />
+        <div use:start></div>
+        <button type="button" use:saveIcon on:click={save}></button>
+        <button type="button" use:loadIcon on:click={load}></button>
+        <button type="button" use:exp on:click={copy}></button>
         <!-- <div use:load /> -->
 
         <div
@@ -267,7 +267,7 @@
                 encounter.empty();
                 $name = "Encounter";
             }}
-        />
+        ></div>
     </div>
 </div>
 {#if !items.length}
@@ -275,7 +275,7 @@
 {:else}
     <div class="encounter-creatures">
         {#each items as [creature, count]}
-            <Creature {creature} {count} />
+            <Creature {creature} {count}></Creature>
         {/each}
     </div>
 {/if}

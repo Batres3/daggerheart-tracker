@@ -37,7 +37,7 @@
 <div class="loading-container">
     <div class="controls">
         <h4>Load An Encounter</h4>
-        <div use:cancel on:click={() => dispatch("cancel")} />
+        <button type="button" use:cancel on:click={() => dispatch("cancel")}></button>
     </div>
     <div class="encounter-container">
         {#if !encounters || !Object.keys(encounters)?.length}
@@ -49,8 +49,8 @@
             <div class="encounter">
                 <span>{encounter}</span>
                 <div class="encounter-controls">
-                    <div use:load={encounter} />
-                    <div use:trash={encounter} />
+                    <div use:load={encounter}></div>
+                    <div use:trash={encounter}></div>
                 </div>
             </div>
         {/each}

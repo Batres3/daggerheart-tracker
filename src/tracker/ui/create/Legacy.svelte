@@ -156,12 +156,12 @@
                 name="initiative"
                 tabindex="0"
             />
-            <div class="dice" use:diceButton />
+            <div class="dice" use:diceButton></div>
         </div>
 
         <div>
             <label for="add-mod">Hidden</label>
-            <div use:hideToggle />
+            <div use:hideToggle></div>
         </div>
 
         <div class="amount">
@@ -180,9 +180,9 @@
             use:cancelButton
             class="add-button cancel-button"
             on:click={() => dispatch("close")}
-        />
-        <div class="add-button" use:editButton on:click={() => add()} />
-        <div class="add-button" use:addButton on:click={() => add(false)} />
+        ></div>
+        <button type="button" class="add-button" use:editButton on:click={() => add()}></button>
+        <button type="button" class="add-button" use:addButton on:click={() => add(false)}></button>
     </div>
 </div>
 

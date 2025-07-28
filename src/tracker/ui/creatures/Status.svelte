@@ -2,7 +2,7 @@
     import { ExtraButtonComponent, setIcon } from "obsidian";
     import type { Condition } from "src/types/creatures";
     import { createEventDispatcher } from "svelte";
-    
+
     const dispatch = createEventDispatcher();
 
     export let status: Condition;
@@ -36,12 +36,12 @@
                     status.amount--;
                     if (status.amount <= 0) dispatch("remove");
                 }}
-            />
+            ></div>
             <span>{status.amount}</span>
-            <div class="icon" use:plus on:click={() => status.amount++} />
+            <button type="button" class="icon" use:plus on:click={() => status.amount++}></button>
         </div>
     {/if}
-    <div use:deleteIcon on:click={() => dispatch("remove")} />
+    <button type="button" use:deleteIcon on:click={() => dispatch("remove")}></button>
 </div>
 
 <style>

@@ -12,7 +12,6 @@
     const dispatch = createEventDispatcher<{ settings: MouseEvent }>();
 
     const filterStore = getContext<BuiltFilterStore>("filters");
-    const { active, name, layout } = filterStore;
 
     const resetIcon = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon("reset");
@@ -27,18 +26,18 @@
 
 <div class="filters-container">
     <div class="controls">
-        <String filter={name} />
+        <String filter={$filterStore.name}></String>
         <div class="filter-button" on:click={() => (open = !open)}>
-            <div use:filter />
-            <div class="filter-number">{$active}</div>
+            <div use:filter></div>
+            <div class="filter-number">{$filterStore.active}</div>
         </div>
-        <div use:resetIcon on:click={() => filterStore.reset()} />
-        <div use:settingsIcon on:click={(evt) => dispatch("settings", evt)} />
+        <button type="button" use:resetIcon on:click={() => filterStore.reset()}></button>
+        <button type="button" use:settingsIcon on:click={(evt) => dispatch("settings", evt)}></button>
     </div>
     {#if open}
         <div class="filters" transition:slide={{ easing: linear }}>
-            {#each $layout as layout}
-                <FilterContainer {layout} />
+            {#each $filterStore.layout as layout}
+                <FilterContainer {layout}></FilterContainer>
             {/each}
         </div>
     {/if}

@@ -58,19 +58,19 @@
         class="initiative-tracker-creator"
         class:editing={isEditing || Platform.isMobile}
     >
-        <Create {plugin} {editing} {adding} {isEditing} />
+        <Create {plugin} {editing} {adding} {isEditing}></Create>
         {#if !isEditing && !Platform.isMobile}
             <div class="creator-list">
-                <List {adding} {editing} />
+                <List {adding} {editing}></List>
             </div>
         {/if}
     </div>
     <div class="buttons">
-        <div use:cancel />
+        <div use:cancel></div>
         <div
             use:add
             class:disabled={!$adding.length && !isEditing && !Platform.isMobile}
-        />
+        ></div>
     </div>
 </div>
 

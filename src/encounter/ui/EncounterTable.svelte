@@ -36,7 +36,7 @@
     </thead>
     <tbody>
         {#each encounters as encounter}
-            <EncounterRow {...encounter} {headers} {plugin} />
+            <EncounterRow {...encounter} {headers} {plugin}></EncounterRow>
         {/each}
     </tbody>
 </table>

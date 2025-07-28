@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, setContext } from "svelte/internal";
+    import { createEventDispatcher, setContext } from "svelte";
     import {
         type BuiltFilterStore,
         DEFAULT_NEW_FILTER,
@@ -63,8 +63,8 @@
     };
 </script>
 
-<div use:reset />
-<div use:add />
+<div use:reset></div>
+<div use:add></div>
 
 {#key copied}
     {#each copied as block}
@@ -73,9 +73,9 @@
             {block}
             inline={true}
             on:update={() => dispatch("update", copied)}
-        />
+        ></Filters>
     {/each}
 {/key}
 <div class="cancel-button">
-    <div use:cancel on:click={() => dispatch("cancel")} />
+    <button type="button" use:cancel on:click={() => dispatch("cancel")}></button>
 </div>

@@ -4,12 +4,12 @@
 
 <details {open} on:toggle>
     <summary>
-        <slot name="title" />
+        <slot name="title"></slot>
         <div class="collapser">
-            <div class="handle" />
+            <div class="handle"></div>
         </div>
     </summary>
-    <slot name="content" />
+    <slot name="content"></slot>
 </details>
 
 <style scoped>

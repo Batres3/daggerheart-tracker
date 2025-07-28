@@ -76,28 +76,28 @@
         on:add-creatures={() => editOrAdd()}
         on:player-view
         on:open-map
-    />
+    ></Controls>
 
-    <Metadata />
+    <Metadata></Metadata>
     <Table
         on:edit={(evt) => editOrAdd(evt.detail)}
         on:open-combatant={(evt) => plugin.openCombatant(evt.detail)}
-    />
-    <Updating />
+    ></Table>
+    <Updating></Updating>
     {#if saving}
-        <SaveEncounter on:cancel={() => (saving = false)} />
+        <SaveEncounter on:cancel={() => (saving = false)}></SaveEncounter>
     {:else if loading}
-        <LoadEncounter on:cancel={() => (loading = false)} />
+        <LoadEncounter on:cancel={() => (loading = false)}></LoadEncounter>
     {:else}
         <div class="add-creature-container">
             <div class="context-container">
-                <div use:copyButton class="copy-button" />
+                <div use:copyButton class="copy-button"></div>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                     use:addButton
                     class="add-button"
                     on:click={() => editOrAdd()}
-                />
+                ></div>
             </div>
         </div>
     {/if}

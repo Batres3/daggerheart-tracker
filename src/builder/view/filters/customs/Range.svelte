@@ -23,7 +23,7 @@
         order
         min={filter.options[0]}
         max={filter.options[1]}
-    />
+    ></Slider>
     <input
         type="number"
         placeholder={max}

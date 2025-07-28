@@ -63,10 +63,10 @@
         on:mouseleave={cancelHover}
     >
         {#if creature.hidden}
-            <div class="centered-icon" use:hiddenIcon />
+            <div class="centered-icon" use:hiddenIcon></div>
         {/if}
         {#if creature.friendly}
-            <div class="centered-icon" use:friendlyIcon />
+            <div class="centered-icon" use:friendlyIcon></div>
         {/if}
             <span class="name">{name()}</span>
     </div>
@@ -82,7 +82,7 @@
                             change: { remove_status: [status] }
                         });
                     }}
-                />
+                ></Status>
             {/each}
         {/if}
     </div>
@@ -142,7 +142,7 @@
         on:edit
         on:hp
         {creature}
-    />
+    ></CreatureControls>
 </td>
 
 <style scoped>

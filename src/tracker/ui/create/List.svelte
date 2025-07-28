@@ -65,42 +65,45 @@
                 <div class="creature-metadata">
                     <div class="creature-name">{creature.getName()}</div>
                     <div class="creature-amount">
-                        <div
+                        <button
+                            type="button"
                             class="creature-minus"
                             use:minusIcon={creature}
                             on:click|stopPropagation={(evt) =>
                                 minus(evt, index)}
-                        />
+                        ></button>
                         <div class="creature-number">{number}</div>
-                        <div
+                        <button
+                            type="button"
                             class="creature-minus"
                             use:plusIcon={creature}
                             on:click|stopPropagation={(evt) => add(evt, index)}
-                        />
-                        <div
+                        ></button>
+                        <button
+                            type="button"
                             class="creature-delete"
                             use:delIcon={creature}
                             on:click|stopPropagation={(evt) => del(evt, index)}
-                        />
+                        ></button>
                     </div>
                 </div>
                 <small class="creature-data">
                         <span>
                             {creature.dc.max ?? DEFAULT_UNDEFINED}
-                            <span use:dc />
+                            <span use:dc></span>
                         </span>
                         <span>
                             {creature.hp.max ?? DEFAULT_UNDEFINED}
-                            <span use:heart />
+                            <span use:heart></span>
                         <span>
                             {creature.stress.max ?? DEFAULT_UNDEFINED}
-                            <span use:brain />
+                            <span use:brain></span>
                         </span>
                         {#if creature.hidden}
-                            <span use:hidden />
+                            <span use:hidden></span>
                         {/if}
                         {#if creature.friendly}
-                            <span use:friendly />
+                            <span use:friendly></span>
                         {/if}
                     </span>
                 </small>

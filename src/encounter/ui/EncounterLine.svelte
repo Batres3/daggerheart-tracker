@@ -126,7 +126,7 @@
                 <span aria-label={label(creature)}
                     >{joiner(index, creatures.size)}<strong
                         use:rollerEl={creature}
-                    />
+                    ></strong>
                     <span
                         class="creature-name"
                         on:click={() => plugin.openCombatant(creature)}
@@ -149,12 +149,12 @@
             use:openButton
             on:click|stopPropagation={open}
             aria-label="Begin Encounter"
-        />
+        ></span>
         <span
             use:addButton
             on:click|stopPropagation={add}
             aria-label="Add to Encounter"
-        />
+        ></span>
     </span>
 </span>
 

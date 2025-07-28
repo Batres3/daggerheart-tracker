@@ -53,12 +53,12 @@
 </script>
 
 <table class="initiative-tracker-table" transition:fade>
-    <thead class="tracker-table-header">
-        <th style="width:5%"><strong use:iniIcon /></th>
+    <thead class="tracker-table-header"><tr>
+        <th style="width:5%"><strong use:iniIcon></strong></th>
         <th class="left" style="width:30%"><strong>Name</strong></th>
-        <th style="width:15%" class="center"><strong use:hpIcon /></th>
+        <th style="width:15%" class="center"><strong use:hpIcon></strong></th>
         <th><strong> Statuses </strong></th>
-    </thead>
+    </tr></thead>
     <tbody>
         {#each activeAndVisible as creature (creature.id)}
             <tr class:active={amIActive(creature) && $state}>
@@ -69,7 +69,7 @@
                             class="contains-icon"
                             use:friendIcon
                             aria-label={`This creature is an ally.`}
-                        />
+                        ></div>
                     {/if}
                     {name(creature)}
                 </td>

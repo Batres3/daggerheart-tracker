@@ -54,13 +54,13 @@
 
 <table class="initiative-tracker-table">
     {#if $ordered.length}
-        <thead class="tracker-table-header">
+        <thead class="tracker-table-header"><tr>
             <th class="left" style="width:55%">Name</th>
-            <th style="width:15%" use:dcIcon class="center" />
-            <th style="width:15%" use:hpIcon class="center" />
-            <th style="width:15%" use:stressIcon class="center" />
-            <th style="width:5%" />
-        </thead>
+            <th style="width:15%" use:dcIcon class="center"></th>
+            <th style="width:15%" use:hpIcon class="center"></th>
+            <th style="width:15%" use:stressIcon class="center"></th>
+            <th style="width:5%"></th>
+        </tr></thead>
         <tbody
             use:dndzone={{
                 items,
@@ -95,7 +95,7 @@
                         on:tag
                         on:edit
                         on:open-combatant
-                    />
+                    ></CreatureTemplate>
                 </tr>
             {/each}
         </tbody>

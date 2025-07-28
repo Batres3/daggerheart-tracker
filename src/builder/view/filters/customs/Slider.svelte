@@ -62,21 +62,21 @@
 </script>
 
 <div class="track-container" on:click={handleClick}>
-    <input type="number" value={value[0]} name={name[0]} />
+    <input type="number" value={value[0]} name={name[0]}/>
     {#if range}
-        <input type="number" value={value[1]} name={name[1]} />
+        <input type="number" value={value[1]} name={name[1]}/>
     {/if}
     <div class="track">
-        <div class="progress" style={progress} />
+        <div class="progress" style={progress}></div>
         <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => (active = v)}>
-            <div class="thumb" />
+            <div class="thumb"></div>
         </Thumb>
         {#if range}
             <Thumb
                 bind:pos={pos[1]}
                 on:active={({ detail: v }) => (active = v)}
             >
-                <div class="thumb" />
+                <div class="thumb"></div>
             </Thumb>
         {/if}
     </div>
