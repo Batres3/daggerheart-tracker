@@ -521,7 +521,7 @@ function createTracker() {
                     });
                 }
                 if ((!state && _logger) || state?.newLog) {
-                    _logger.logging = false;
+                    if (_logger) _logger.logging = false;
                     $logFile.set(null);
                 }
                 return creatures;

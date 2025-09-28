@@ -19,15 +19,15 @@
     const dcIcon = (node: HTMLElement) => {
         setIcon(node, DC);
     };
-    const iniIcon = (node: HTMLElement) => {
-        setIcon(node, INITIATIVE);
-    };
+    // const iniIcon = (node: HTMLElement) => {
+    //     setIcon(node, INITIATIVE);
+    // };
 
     const getHpStatus = (hp: number, max: number) => {
         if (!hp) return "";
-        if (hp <= 0) return "Defeated";
-        if (hp < max / 2) return "Bloodied";
-        if (hp < max) return "Hurt";
+        if (hp.current <= 0) return "Defeated";
+        if (hp.current < hp.max / 2) return "Bloodied";
+        if (hp.current < hp.max) return "Hurt";
         return "Healthy";
     };
 
@@ -54,7 +54,7 @@
 
 <table class="initiative-tracker-table" transition:fade>
     <thead class="tracker-table-header">
-        <th style="width:5%"><strong use:iniIcon /></th>
+        <!-- <th style="width:5%"><strong use:iniIcon /></th> -->
         <th class="left" style="width:30%"><strong>Name</strong></th>
         <th style="width:15%" class="center"><strong use:hpIcon /></th>
         <th><strong> Statuses </strong></th>
@@ -62,7 +62,6 @@
     <tbody>
         {#each activeAndVisible as creature (creature.id)}
             <tr class:active={amIActive(creature) && $state}>
-                <td class="center">{creature.initiative}</td>
                 <td class='name'>
                     {#if creature.friendly}
                         <div
@@ -75,9 +74,9 @@
                 </td>
                 <td
                     class:center={true}
-                    class={getHpStatus(creature.hp, creature.max).toLowerCase()}
+                    class={getHpStatus(creature.hp).toLowerCase()}
                 >
-                    <span>{getHpStatus(creature.hp, creature.max)}</span>
+                    <span>{getHpStatus(creature.hp)}</span>
                 </td>
                 <td class="center">
                     {[...creature.status].map((s) => s.name).join(", ")}
