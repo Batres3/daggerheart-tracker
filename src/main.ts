@@ -71,7 +71,7 @@ export default class InitiativeTracker extends Plugin {
     }
     get statblock_creatures() {
         if (!window.FantasyStatblocks) return [];
-        return window.FantasyStatblocks.getBestiaryCreatures().map(srd_from_statblocks) as SRDMonster[];
+        return window.FantasyStatblocks.getBestiaryCreatures().filter(x => x.layout?.includes("Daggerheart")).map(srd_from_statblocks) as SRDMonster[];
     }
     get bestiary() {
         return this.statblock_creatures.filter(
