@@ -12,7 +12,6 @@
     const table = getContext<ReturnType<typeof createTable>>("table");
 
     export let creature: SRDMonster;
-    const statblock = CreatureCreator.fromJSON(CreatureCreator.from(creature).toJSON());
     const add = (node: HTMLElement) => {
         new ExtraButtonComponent(node).setIcon("plus-with-circle");
     };
@@ -69,7 +68,7 @@
             <div
                 class="setting-item-name creature-name"
                 on:click={(evt) =>
-                    plugin.openCombatant(statblock)}
+                    plugin.openCombatant(CreatureCreator.fromJSON(CreatureCreator.from(creature).toJSON()))}
             >
                 {creature.name}
             </div>
